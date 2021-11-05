@@ -1,6 +1,5 @@
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
 myModal.show();
-document.getElementById('playerNamesSubmit').disabled = true;
 
 document.getElementById('playerNamesForm').addEventListener('keyup', function (evt) {
     //hier muss noch die Namensunterscheidung hin
@@ -47,22 +46,8 @@ async function startGame() {
         let result = await response.json(); // alternativ response.text wenn nicht json gewünscht ist
         console.log(result);
         alert(JSON.stringify(result));
-
-
-
-
-
-        
-    }else{
-        alert("HTTP-Error: " + response.status);
     }
-
-
-
-
-
 }
-
 
 
 
