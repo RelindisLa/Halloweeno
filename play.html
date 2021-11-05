@@ -43,7 +43,9 @@
             <div class="container">
                 <div class="navbar-brand">
                     <span class="navbar-logo">
-                        <img src="assets/images/fledermaus-rechts.png" alt="Mobirise" style="height: 3rem;">
+                        <a href="https://mobiri.se">
+                            <img src="assets/images/fledermaus-rechts.png" alt="Mobirise" style="height: 3rem;">
+                        </a>
                     </span>
                     <span class="navbar-caption-wrap"><a class="navbar-caption text-white text-primary display-7"
                             href="index.html#top">HALLOWEEno</a></span>
@@ -186,6 +188,12 @@
             </div>
         </div>
     </section>
+    <section
+        style="background-color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; color:#aaa; font-size:12px; padding: 0; align-items: center; display: flex;">
+        <a href="https://mobirise.site/l" style="flex: 1 1; height: 3rem; padding-left: 1rem;"></a>
+        <p style="flex: 0 0 auto; margin:0; padding-right:1rem;">Build a website - <a href="https://mobirise.site/v"
+                style="color:#aaa;">Try it</a></p>
+    </section>
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/web/assets/cookies-alert-plugin/cookies-alert-core.js"></script>
     <script src="assets/web/assets/cookies-alert-plugin/cookies-alert-script.js"></script>
@@ -212,9 +220,10 @@
                                 href='privacy.html'>Datenschutzbestimmungen</a>.
                         </p>
                     </div>
-                    <div class="mbr-section-btn"><a
-                            style="margin:0; background-color:#e43f3f !important; color:#FFFFFF!important; border-color:#e43f3f !important;;"
-                            class="btn btn-sm btn-primary display-7" id="impliedsubmit">Zustimmen</a></div>
+                    <div class="mbr-section-btn">
+                        <a style="margin:0; background-color:#e43f3f !important; color:#FFFFFF!important; border-color:#e43f3f !important;;"
+                            class="btn btn-sm btn-primary display-7" id="impliedsubmit">Zustimmen</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -224,6 +233,46 @@
         data-cookie-colorButton='#e43f3f' data-cookie-colorLink='#ffe161' data-cookie-underlineLink='true'
         data-cookie-text="Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern. Genaueres in unseren Datenschutzbestimmungen.">
     <input name="animation" type="hidden">
+
+    <div class="modal fade" id="playerNames" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+        <form id="playerNamesForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Namen der Spieler*innen</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="m-3 row">
+                            <input type="text" class="form-control" id="playerName1input"
+                                placeholder="Name für Spieler*in 1 eingeben"></input>
+                        </div>
+
+                        <div class="m-3 row">
+                            <input type="text" class="form-control" id="playerName2input"
+                                placeholder="Name für Spieler*in 2 eingeben"></input>
+                        </div>
+
+                        <div class="m-3 row">
+                            <input type="text" class="form-control" id="playerName3input"
+                                placeholder="Name für Spieler*in 3 eingeben"></input>
+                        </div>
+
+                        <div class="m-3 row">
+                            <input type="text" class="form-control" id="playerName4input"
+                                placeholder="Name für Spieler*in 4 eingeben"></input>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" id="playerNamesSubmit">Spiel starten</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <script src="assets/theme/js/game.js"></script>
+
 </body>
 
 </html>
