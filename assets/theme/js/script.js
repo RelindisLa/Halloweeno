@@ -61,5 +61,5 @@ https://codepen.io/mikegolus/pen/Jegvym
 -----------------------------------------------------------------------------------------------*/
 let quantity = 15;
 for (let i = 1; i <= quantity; i++){
-  firefly;
+  firefly = 10;
 }
