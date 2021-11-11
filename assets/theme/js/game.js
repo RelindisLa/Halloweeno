@@ -2,12 +2,11 @@ let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
 myModal.show();
 
 document.getElementById('playerNamesForm').addEventListener('keyup', function (evt) {
-    //hier muss noch die Namensunterscheidung hin
+    //Namensunterscheidung
     let player1 = document.getElementById('playerName1input').value;
     let player2 = document.getElementById('playerName2input').value;
     let player3 = document.getElementById('playerName3input').value;
     let player4 = document.getElementById('playerName4input').value;
-    //console.log(player1 + ", " + player2 + ", " + player3 + ", " + player4);
 
     if (player1 == "" || player2 == "" || player3 == "" || player4 == "") {
         document.getElementById('playerNamesSubmit').disabled = true;
@@ -41,13 +40,28 @@ async function startGame() {
         }
     })
 
+    const startinhalt;
     if(response.ok){ // wenn http-status zwischen 200 und 299 liegt
         // wir lesen den response body 
         let result = await response.json(); // alternativ response.text wenn nicht json gewünscht ist
-        console.log(result);
-        alert(JSON.stringify(result));
+        console.log("result 1:" + result);
+        startinhalt = alert(JSON.stringify(result));
     }
+
+    console.log("result 2:" + startinhalt);
+
+
+
+
+
+
+
+
+
+
 }
+
+
 
 
 
