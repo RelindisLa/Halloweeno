@@ -25,10 +25,10 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
 })
 
 async function startGame() {
-    let player1 = document.getElementById('playerName1input').value;
-    let player2 = document.getElementById('playerName2input').value;
-    let player3 = document.getElementById('playerName3input').value;
-    let player4 = document.getElementById('playerName4input').value;
+    let player1 = document.getElementById('playerName1input').value.toUpperCase();
+    let player2 = document.getElementById('playerName2input').value.toUpperCase();
+    let player3 = document.getElementById('playerName3input').value.toUpperCase();
+    let player4 = document.getElementById('playerName4input').value.toUpperCase();
     let playerliste = [player1,player2,player3,player4];
 
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
@@ -50,32 +50,39 @@ async function startGame() {
     //get and save SpielId:
     var spielID = startinhalt.Id;
 
+    //Karten der Spieler positionieren:
     let counter = 1;
     startinhalt.Players.forEach(element => {
-        //let wo = document.getElementsById(`${"#playerName"}${counter}`);
         let wohin = "playerName" + counter;
-        //console.log(wohin);
         let wo = document.getElementById(wohin);
-        console.log(wo);
+        wo.setAttribute("style", "text-align: center;");
+        wo.setAttribute("class", "row");
+        wo.setAttribute("style", "display: block");
+
         let nameH4 = document.createElement("h4");
+        nameH4.setAttribute("style", "text-align: center");
         let textName = document.createTextNode(element.Player);
         wo.appendChild(nameH4);
         nameH4.appendChild(textName);
 
+        let divA = document.createElement("div");
+        divA.setAttribute("id", "cardsOfPlayer");
+        wo.appendChild(divA);
         element.Cards.forEach(el => {
             const div = document.createElement("div");
+            div.setAttribute("style", "display: inline-block");
             const img = document.createElement("img");
-            img.setAttribute("style", "text-align: center; height: 50px; list-style-type: none;");
             const card = `${el.Color}${convertNumber(el.Value)}`;
             img.src = `${baseUrl}${card}.png`;
             img.setAttribute("class","rounded d-block");
-            img.setAttribute("style","hight: 50px;");
-            wo.appendChild(div);
+            img.setAttribute("style", "height: 80px; padding: 10px");
+            divA.appendChild(div);
             div.appendChild(img);
         })
+
         let playerScore = document.createElement("p");
-        playerScore.setAttribute("style", "text-align: right");
-        let textScore = document.createTextNode(element.Score);
+        playerScore.setAttribute("style", "text-align: center; padding-top: 10px");
+        let textScore = document.createTextNode("Score: " + element.Score);
         wo.appendChild(playerScore);
         playerScore.appendChild(textScore);
 
@@ -86,7 +93,7 @@ async function startGame() {
     let wo1 = document.getElementById("ablagestapel");
     const div1 = document.createElement("div");
     let img1 = document.createElement("img");
-    img1.setAttribute("style", "text-align: center; height: 50px; list-style-type: none");
+    img1.setAttribute("style", "text-align: center; height: 100px;");
     const ablageCard = `${startinhalt.TopCard.Color}${convertNumber(startinhalt.TopCard.Value)}`;
     img1.src = `${baseUrl}${ablageCard}.png`;
     wo1.appendChild(div1);
@@ -99,8 +106,8 @@ async function startGame() {
     let wo2 = document.getElementById("hebestapel");
     const div2 = document.createElement("div");
     let img2 = document.createElement("img");
-    img2.setAttribute("style", "text-align: center; height: 50px; list-style-type: none");
-    const hebeCard = `${Back}${0}`;
+    img2.setAttribute("style", "text-align: center; height: 100px;");
+    const hebeCard = "Back0";
     img2.src = `${baseUrl}${hebeCard}.png`;
     wo2.appendChild(div2);
     div2.appendChild(img2);
