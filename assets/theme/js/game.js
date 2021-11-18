@@ -32,6 +32,7 @@ async function startGame() {
     let player3 = document.getElementById('playerName3input').value.toUpperCase();
     let player4 = document.getElementById('playerName4input').value.toUpperCase();
     playerliste = [player1,player2,player3,player4];
+    console.log("aktiverSpieler ?? playerList ist: " + playerliste);
 
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
@@ -45,7 +46,7 @@ async function startGame() {
     let startinhalt;
     if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
         startinhalt = await response.json(); // response Body auslesen
-        console.log(startinhalt.stringify)
+        //console.log(startinhalt.stringify)
         //alert(JSON.stringify(startinhalt));
     }
 
@@ -91,7 +92,6 @@ async function startGame() {
         counter++;
     });
 //Ablagestapel:
-//function createAblegestapel() {
     let wo1 = document.getElementById("ablagestapel");
     const div1 = document.createElement("div");
     let img1 = document.createElement("img");
@@ -100,11 +100,8 @@ async function startGame() {
     img1.src = `${baseUrl}${ablageCard}.png`;
     wo1.appendChild(div1);
     div1.appendChild(img1);
-//}
-//createAblegestapel;
 
 //Hebestapel:
-//function createAbhebestapel() {
     let wo2 = document.getElementById("hebestapel");
     const div2 = document.createElement("div");
     let img2 = document.createElement("img");
@@ -113,8 +110,13 @@ async function startGame() {
     img2.src = `${baseUrl}${hebeCard}.png`;
     wo2.appendChild(div2);
     div2.appendChild(img2);
-    //}
-//createAbhebestapel;
+
+//AktiverSpieler:
+    aktiverSpieler = startinhalt.NextPlayer; //Sting mit Namen
+    //console.log(aktiverSpieler);
+    blurUnactivPlayer(aktiverSpieler);
+
+
 
     /*
     //tatsächlich kommt retour:
@@ -213,33 +215,28 @@ function convertToText(cardValue) {
 }
 
 //Aktiver Spieler:
-document.getElementById("spielfeld").addEventListener("blur",function(ev){
-    let p1 = document.getElementById("playerName1");
-    let p2 = document.getElementById("playerName2");
-    let p3 = document.getElementById("playerName3");
-    let p4 = document.getElementById("playerName4");
-    let a = document.getElementById("ablagestapel");
-    let h = document.getElementById("hebestapel");
 
+function blurUnactivPlayer(player){
 
+    let p1 = document.getElementsByTagName("h4");
+    console.log(p1);
 
+    p1.forEach(element => {
+         if(element.textContent != aktiverSpieler){
+            element.addEventListener('blur',(event) => {
+             event.target.style.background = '';});
+    }
+});
 
+    
 
-
-
-
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*
+    p1.forEach(function(pl){
+        if(pl.textContent == aktiverSpieler){
+            pl.addEventListener("focus")
+        } else { pl.addEventListener("blur")}
+    });
+    //document.getElementById("spielfeld").addEventListener("blur",function(ev){   })
+    */
+}
 
