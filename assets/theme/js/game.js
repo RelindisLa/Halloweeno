@@ -91,20 +91,17 @@ async function startGame() {
         counter++;
     });
 //Ablagestapel:
-//function createAblegestapel() {
+
     let wo1 = document.getElementById("ablagestapel");
     const div1 = document.createElement("div");
     let img1 = document.createElement("img");
     img1.setAttribute("style", "text-align: center; height: 100px;");
-    const ablageCard = `${startinhalt.TopCard.Color}${startinhalt.TopCard.Value}`; //    const ablageCard = `${startinhalt.TopCard.Color}${convertNumber(startinhalt.TopCard.Value)}`;
+    const ablageCard = `${startinhalt.TopCard.Color}${startinhalt.TopCard.Value}`;
     img1.src = `${baseUrl}${ablageCard}.png`;
     wo1.appendChild(div1);
     div1.appendChild(img1);
-//}
-//createAblegestapel;
 
 //Hebestapel:
-//function createAbhebestapel() {
     let wo2 = document.getElementById("hebestapel");
     const div2 = document.createElement("div");
     let img2 = document.createElement("img");
@@ -113,8 +110,19 @@ async function startGame() {
     img2.src = `${baseUrl}${hebeCard}.png`;
     wo2.appendChild(div2);
     div2.appendChild(img2);
-    //}
-//createAbhebestapel;
+
+// Karte ziehen
+    async function drawCard() {
+        let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/drawCard/", {
+            method: 'PUT',
+            // body: JSON.stringify(
+            //
+            // ),
+            // headers: {
+            //     'Content-type': 'application/json; charset=UTF-8',
+            // }
+        })
+    }
 
     /*
     //tatsächlich kommt retour:
@@ -186,7 +194,7 @@ async function startGame() {
     
         event.target.classLis.toggle("selected")
     });
-    
+
 
 function convertNumber(cardValue) {
     if (cardValue < 15)
