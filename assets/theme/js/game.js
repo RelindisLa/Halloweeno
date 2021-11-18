@@ -31,7 +31,7 @@ async function startGame() {
     let player2 = document.getElementById('playerName2input').value.toUpperCase();
     let player3 = document.getElementById('playerName3input').value.toUpperCase();
     let player4 = document.getElementById('playerName4input').value.toUpperCase();
-    playerliste = [player1,player2,player3,player4];
+    playerliste = [player1, player2, player3, player4];
 
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
@@ -45,12 +45,12 @@ async function startGame() {
     let startinhalt;
     if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
         startinhalt = await response.json(); // response Body auslesen
-        console.log(startinhalt.stringify)
+        console.log(startinhalt)
         //alert(JSON.stringify(startinhalt));
     }
 
     //get and save SpielId:
-    var spielID = startinhalt.Id;
+    const spielID = startinhalt.Id;
 
     //Karten der Spieler positionieren:
     let counter = 1;
@@ -112,17 +112,17 @@ async function startGame() {
     div2.appendChild(img2);
 
 // Karte ziehen
-    async function drawCard() {
-        let response = await fetch("http://nowaunoweb.azurewebsites.net/api/game/drawCard/", {
+       async function drawCard() {
+        let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
             method: 'PUT',
-            // body: JSON.stringify(
-            //
-            // ),
-            // headers: {
-            //     'Content-type': 'application/json; charset=UTF-8',
-            // }
-        })
+        });
+        let newCard;
+        if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
+            newCard = await response.json(); // response Body auslesen
+            console.log(newCard)
+        }
     }
+    document.getElementById('hebestapel').addEventListener('click', drawCard);
 
     /*
     //tatsächlich kommt retour:
