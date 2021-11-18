@@ -1,4 +1,6 @@
-const baseUrl = "C:/Users/Cinda/OneDrive/Dokumente/Campus02/LV Web2/Projekt/Halloweeno/Halloweeno/assets/images/card";
+const baseUrl = "assets/images/card/";
+let aktiverSpieler = 0;
+let playerliste = 0;
 
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
 myModal.show();
@@ -29,7 +31,7 @@ async function startGame() {
     let player2 = document.getElementById('playerName2input').value.toUpperCase();
     let player3 = document.getElementById('playerName3input').value.toUpperCase();
     let player4 = document.getElementById('playerName4input').value.toUpperCase();
-    let playerliste = [player1,player2,player3,player4];
+    playerliste = [player1,player2,player3,player4];
 
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
@@ -72,7 +74,7 @@ async function startGame() {
             const div = document.createElement("div");
             div.setAttribute("style", "display: inline-block");
             const img = document.createElement("img");
-            const card = `${el.Color}${convertNumber(el.Value)}`;
+            const card = `${el.Color}${el.Value}`;
             img.src = `${baseUrl}${card}.png`;
             img.setAttribute("class","rounded d-block");
             img.setAttribute("style", "height: 80px; padding: 10px");
@@ -94,7 +96,7 @@ async function startGame() {
     const div1 = document.createElement("div");
     let img1 = document.createElement("img");
     img1.setAttribute("style", "text-align: center; height: 100px;");
-    const ablageCard = `${startinhalt.TopCard.Color}${convertNumber(startinhalt.TopCard.Value)}`;
+    const ablageCard = `${startinhalt.TopCard.Color}${startinhalt.TopCard.Value}`; //    const ablageCard = `${startinhalt.TopCard.Color}${convertNumber(startinhalt.TopCard.Value)}`;
     img1.src = `${baseUrl}${ablageCard}.png`;
     wo1.appendChild(div1);
     div1.appendChild(img1);
@@ -106,14 +108,13 @@ async function startGame() {
     let wo2 = document.getElementById("hebestapel");
     const div2 = document.createElement("div");
     let img2 = document.createElement("img");
-    img2.setAttribute("style", "text-align: center; height: 100px;");
+    img2.setAttribute("style", "text-align: center; height: 100px; width:100%");
     const hebeCard = "Back0";
     img2.src = `${baseUrl}${hebeCard}.png`;
     wo2.appendChild(div2);
     div2.appendChild(img2);
-//}
+    //}
 //createAbhebestapel;
-
 
     /*
     //tatsächlich kommt retour:
@@ -186,23 +187,48 @@ async function startGame() {
         event.target.classLis.toggle("selected")
     });
     
+
+function convertNumber(cardValue) {
+    if (cardValue < 15)
+        return cardValue
+
+
+}
+
+
+function convertToText(cardValue) {
+    if (cardValue  != Number)
+        return cardValue
+
+    switch (cardValue) {
+        case "d2": return 10;
+        case "s": return 11;
+        case "r": return 12;
+        case "wd4": return 13;
+        case "wild": return 14;
+    }
+}
     */
 
 }
 
+//Aktiver Spieler:
+document.getElementById("spielfeld").addEventListener("blur",function(ev){
+    let p1 = document.getElementById("playerName1");
+    let p2 = document.getElementById("playerName2");
+    let p3 = document.getElementById("playerName3");
+    let p4 = document.getElementById("playerName4");
+    let a = document.getElementById("ablagestapel");
+    let h = document.getElementById("hebestapel");
 
-function convertNumber(cardValue) {
-    if (cardValue < 10)
-        return cardValue
 
-    switch (cardValue) {
-        case 10: return "d2";
-        case 11: return "s";
-        case 12: return "r";
-        case 13: return "wd4";
-        case 14: return "wild";
-    }
-}
+
+
+
+
+
+
+})
 
 
 
