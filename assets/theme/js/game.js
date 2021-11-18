@@ -51,7 +51,7 @@ async function startGame() {
     }
 
     //get and save SpielId:
-    var spielID = startinhalt.Id;
+    const spielID = startinhalt.Id;
 
     //Karten der Spieler positionieren:
     let counter = 1;
@@ -96,7 +96,7 @@ async function startGame() {
     const div1 = document.createElement("div");
     let img1 = document.createElement("img");
     img1.setAttribute("style", "text-align: center; height: 100px;");
-    const ablageCard = `${startinhalt.TopCard.Color}${startinhalt.TopCard.Value}`; //    const ablageCard = `${startinhalt.TopCard.Color}${convertNumber(startinhalt.TopCard.Value)}`;
+    const ablageCard = `${startinhalt.TopCard.Color}${startinhalt.TopCard.Value}`;
     img1.src = `${baseUrl}${ablageCard}.png`;
     wo1.appendChild(div1);
     div1.appendChild(img1);
@@ -117,6 +117,18 @@ async function startGame() {
     blurUnactivPlayer(aktiverSpieler);
 
 
+// Karte ziehen
+       async function drawCard() {
+        let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
+            method: 'PUT',
+        });
+        let newCard;
+        if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
+            newCard = await response.json(); // response Body auslesen
+            console.log(newCard)
+        }
+    }
+    document.getElementById('hebestapel').addEventListener('click', drawCard);
 
     /*
     //tatsächlich kommt retour:
@@ -188,7 +200,7 @@ async function startGame() {
     
         event.target.classLis.toggle("selected")
     });
-    
+
 
 function convertNumber(cardValue) {
     if (cardValue < 15)
