@@ -118,17 +118,18 @@ async function startGame() {
 
 
 // Karte ziehen
-       async function drawCard() {
-        let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
-            method: 'PUT',
-        });
-        let newCard;
-        if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
-            newCard = await response.json(); // response Body auslesen
-            console.log(newCard)
-        }
+async function drawCard() {
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
+        method: 'PUT',
+    });
+    let newCard;
+    if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
+        newCard = await response.json(); // response Body auslesen
+        console.log(newCard);
     }
-    document.getElementById('hebestapel').addEventListener('click', drawCard);
+    startinhalt.
+
+document.getElementById('hebestapel').addEventListener('click', drawCard);
 
     /*
     //tatsächlich kommt retour:
@@ -240,7 +241,7 @@ function blurUnactivPlayer(player){
     }
 });
 
-    
+
 
 /*
     p1.forEach(function(pl){
