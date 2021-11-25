@@ -156,7 +156,7 @@ function focusAktivPlayer(aktiverSpieler){
 
 }
 
-function playCard(){  
+function playCard(){
     //Spiellogik - > nur gültige Karten spielen:
     let topKarte = document.getElementById('ablagestapel').childNodes;
     let counter = 0;
@@ -170,16 +170,16 @@ function playCard(){
     let value = atr0.Value;
     let color = atr1.Color;
     let aP = document.getElementById(aktiverSpieler).childNodes;
-    aP.filter(element => 
+    aP.filter(element =>
         element.Value !== value || element.Color !== color || element.Color !== 'Black');
-    
+
     //sonst:
     aP.add('shake');
 
     //wenn gültig:
     let ablage = document.getElementById('ablagestapel');
     ablage.addEventListener('change', karteAblegen);
-    
+
 
 
     /*
@@ -218,7 +218,7 @@ async function karteAblegen(){
         method: 'PUT',
     });
     let responseInfo;
-    if (response.ok) { 
+    if (response.ok) {
         responseInfo = await response.json();
         console.log(responseInfo);
         if(responseInfo.error == 'WrongColor'){
@@ -249,7 +249,7 @@ async function drawCard() {
         method: 'PUT',
     });
     let newCard;
-    if (response.ok) { 
+    if (response.ok) {
         newCard = await response.json(); // response Body auslesen
         console.log(newCard);
         addCard(newCard.Card);
@@ -272,25 +272,6 @@ function addCard(el){
 }
 
 
-
-/*function convertNumber(cardValue) {
-    if (cardValue < 15)
-        return cardValue
-}
-
-function convertToText(cardValue) {
-    if (cardValue  != Number)
-        return cardValue
-
-    switch (cardValue) {
-        case "d2": return 10;
-        case "s": return 11;
-        case "r": return 12;
-        case "wd4": return 13;
-        case "wild": return 14;
-    }
-}
-*/
 
 
 
