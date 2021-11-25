@@ -229,20 +229,33 @@ function convertToText(cardValue) {
 //Aktiver Spieler:
 
 function blurUnactivPlayer(player){
-
-    let p1 = document.getElementsByTagName("h4");
+    let p1 = document.getElementsByTagName("h4")
+    
+    p1.addEventListener('blur',(event) => {
+        event.target.style.background = '';
+    });
     console.log(p1);
 
+    for(let i = 0; i < p1.length; i++){
+        if(element.textContent == aktiverSpieler){
+            console.log("textContent: " + element.textContent);
+            console.log("aktivPlayer: " + aktiverSpieler);
+            p1[i].addEventListener('focus');
+        }
+    }
+}
+
+    
+
+/*
     p1.forEach(element => {
          if(element.textContent != aktiverSpieler){
             element.addEventListener('blur',(event) => {
              event.target.style.background = '';});
     }
-});
-
-    
-
-/*
+    p1.forEach(element => element.textContent == aktiverSpieler) {
+        element.addEventListener('focus')
+   }
     p1.forEach(function(pl){
         if(pl.textContent == aktiverSpieler){
             pl.addEventListener("focus")
@@ -250,5 +263,5 @@ function blurUnactivPlayer(player){
     });
     //document.getElementById("spielfeld").addEventListener("blur",function(ev){   })
     */
-}
+
 
