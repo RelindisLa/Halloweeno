@@ -967,5 +967,7 @@ Hier ist der Code für die Player
 -----------------------------------------------------------------------------------------------*/
 
 #spielfeld {
-  color: white;
+  color: rgb(104, 93, 93);
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  text-shadow: 2px 2px 4px #fff;
 }
