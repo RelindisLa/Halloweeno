@@ -118,8 +118,51 @@ async function startGame() {
     console.log("AktivPlayer is: " + aktiverSpieler);
 }
 
+//Aktiver Spieler:
 blurUnactivPlayer();
 //focusActivPlayer(aktiverSpieler);
+
+function blurUnactivPlayer() {
+    document.getElementById('spielerkarten1u2').addEventListener('blur',(event) => {
+        event.target.style.background = '';});
+    document.getElementById('spielerkarten3u4').addEventListener('blur', (event) => {
+        event.target.style.background = '';});
+}
+
+function focusActivPlayer(player){
+    let p1 = document.querySelector('#h4').value;
+    
+    console.log("p1 Array: " + p1);
+    console.log("activePlayer is: " + player);
+
+    for(let i = 0; i < p1.length; i++){
+        if(i == player){
+            console.log("textContent of p1[1]: " + i);
+            p1[i].addEventListener('focus', (event) => {
+                event.target.style.background = 'black';
+              });
+        }
+    }
+}
+
+/*
+    p1.forEach(element => {
+         if(element.textContent != aktiverSpieler){
+            element.addEventListener('blur',(event) => {
+             event.target.style.background = '';});
+    }
+    p1.forEach(element => element.textContent == aktiverSpieler) {
+        element.addEventListener('focus')
+   }
+    p1.forEach(function(pl){
+        if(pl.textContent == aktiverSpieler){
+            pl.addEventListener("focus")
+        } else { pl.addEventListener("blur")}
+    });
+    //document.getElementById("spielfeld").addEventListener("blur",function(ev){   })
+    */
+
+
 
 // Karte ziehen
 document.getElementById('hebestapel').addEventListener('click', drawCard);
@@ -153,49 +196,5 @@ function convertToText(cardValue) {
 }
 */
 
-
-//Aktiver Spieler:
-
-function blurUnactivPlayer() {
-    document.getElementById('spielerkarten1u2').addEventListener('blur',(event) => {
-        event.target.style.background = '';});
-    document.getElementById('spielerkarten3u4').addEventListener('blur', (event) => {
-        event.target.style.background = '';});
-}
-
-function focusActivPlayer(player){
-    let p1 = document.querySelector('#h4').value;
-    
-    console.log("p1 Array: " + p1);
-    console.log("activePlayer is: " + player);
-
-    for(let i = 0; i < p1.length; i++){
-        if(i == player){
-            console.log("textContent of p1[1]: " + i);
-            p1[i].addEventListener('focus', (event) => {
-                event.target.style.background = 'black';
-              });
-        }
-    }
-}
-
-
-
-/*
-    p1.forEach(element => {
-         if(element.textContent != aktiverSpieler){
-            element.addEventListener('blur',(event) => {
-             event.target.style.background = '';});
-    }
-    p1.forEach(element => element.textContent == aktiverSpieler) {
-        element.addEventListener('focus')
-   }
-    p1.forEach(function(pl){
-        if(pl.textContent == aktiverSpieler){
-            pl.addEventListener("focus")
-        } else { pl.addEventListener("blur")}
-    });
-    //document.getElementById("spielfeld").addEventListener("blur",function(ev){   })
-    */
 
 
