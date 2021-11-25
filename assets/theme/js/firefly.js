@@ -58,6 +58,7 @@ function(e) {
 },
 false
 );
+
 function init(elemid) {
 let canvas = document.getElementById(elemid),
   c = canvas.getContext("2d"),

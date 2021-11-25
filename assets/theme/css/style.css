@@ -952,13 +952,20 @@ blockquote {
 Hier ist das Bild für den FireFly Hintergund
 -----------------------------------------------------------------------------------------------*/
 
-section #halloweenoSpiel{
-  margin: 0px;
-  padding: 0px;
+#halloweenoSpiel{
   position: fixed;
-  background-image: url('assets/images/FireflyBackground.webp');
+  background-image: url('../../images/FireflyBackground.jpg');
   background-size: cover;
 }
 canvas{
-  filter: blur(1px);
+  filter: blur(3px);
+}
+
+
+/* ----------------------------------------------------------------------------------------------
+Hier ist der Code für die Player
+-----------------------------------------------------------------------------------------------*/
+
+#spielfeld {
+  color: white;
 }

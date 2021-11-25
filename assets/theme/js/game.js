@@ -66,7 +66,7 @@ async function startGame() {
         let textName = document.createTextNode(element.Player);
         wo.appendChild(nameH4);
         nameH4.appendChild(textName);
-        
+
         let playerScore = document.createElement("p");
         playerScore.setAttribute("style", "text-align: center; padding-top: 10px");
         let textScore = document.createTextNode("Score: " + element.Score);
@@ -118,7 +118,7 @@ async function startGame() {
     console.log("AktivPlayer is: " + aktiverSpieler);
 }
 
-//blurUnactivPlayer();
+blurUnactivPlayer();
 //focusActivPlayer(aktiverSpieler);
 
 // Karte ziehen
@@ -155,7 +155,7 @@ function convertToText(cardValue) {
 
 
 //Aktiver Spieler:
-/*
+
 function blurUnactivPlayer() {
     document.getElementById('spielerkarten1u2').addEventListener('blur',(event) => {
         event.target.style.background = '';});
@@ -179,7 +179,7 @@ function focusActivPlayer(player){
     }
 }
 
-*/
+
 
 /*
     p1.forEach(element => {
