@@ -20,7 +20,6 @@ document.getElementById('playerNamesForm').addEventListener('keyup', function (e
 });
 
 document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
-    console.log("submit");
     startGame();
     evt.preventDefault();
     myModal.hide();
@@ -32,7 +31,7 @@ async function startGame() {
     let player3 = document.getElementById('playerName3input').value.toUpperCase();
     let player4 = document.getElementById('playerName4input').value.toUpperCase();
     playerliste = [player1,player2,player3,player4];
-    console.log("aktiverSpieler ?? playerList ist: " + playerliste);
+    //console.log("playerList ist: " + playerliste);
 
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
@@ -67,6 +66,12 @@ async function startGame() {
         let textName = document.createTextNode(element.Player);
         wo.appendChild(nameH4);
         nameH4.appendChild(textName);
+        
+        let playerScore = document.createElement("p");
+        playerScore.setAttribute("style", "text-align: center; padding-top: 10px");
+        let textScore = document.createTextNode("Score: " + element.Score);
+        wo.appendChild(playerScore);
+        playerScore.appendChild(textScore);
 
         let divA = document.createElement("div");
         divA.setAttribute("id", "cardsOfPlayer");
@@ -83,11 +88,7 @@ async function startGame() {
             div.appendChild(img);
         })
 
-        let playerScore = document.createElement("p");
-        playerScore.setAttribute("style", "text-align: center; padding-top: 10px");
-        let textScore = document.createTextNode("Score: " + element.Score);
-        wo.appendChild(playerScore);
-        playerScore.appendChild(textScore);
+
 
         counter++;
     });
@@ -111,13 +112,17 @@ async function startGame() {
     wo2.appendChild(div2);
     div2.appendChild(img2);
 
+
 //AktiverSpieler:
     aktiverSpieler = startinhalt.NextPlayer; //Sting mit Namen
-    //console.log(aktiverSpieler);
-    blurUnactivPlayer(aktiverSpieler);
+    console.log("AktivPlayer is: " + aktiverSpieler);
+}
 
+//blurUnactivPlayer();
+//focusActivPlayer(aktiverSpieler);
 
 // Karte ziehen
+document.getElementById('hebestapel').addEventListener('click', drawCard);
 async function drawCard() {
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
         method: 'PUT',
@@ -127,89 +132,12 @@ async function drawCard() {
         newCard = await response.json(); // response Body auslesen
         console.log(newCard);
     }
-    startinhalt.
-
-document.getElementById('hebestapel').addEventListener('click', drawCard);
-
-    /*
-    //tatsächlich kommt retour:
-    {
-    "Id":"73936523-e4ec-46c2-832f-4df69df03a04",
-    "Players":[
-        {   "Player":"a",
-            "Cards":[   {"Color":"Red","Text":"Five","Value":5,"Score":5},
-                        {"Color":"Yellow","Text":"One","Value":1,"Score":1},
-                        {"Color":"Yellow","Text":"Six","Value":6,"Score":6},
-                        {"Color":"Yellow","Text":"Skip","Value":11,"Score":20},
-                        {"Color":"Blue","Text":"Six","Value":6,"Score":6},
-                        {"Color":"Blue","Text":"Draw2","Value":10,"Score":20},
-                        {"Color":"Black","Text":"ChangeColor","Value":14,"Score":50} ],
-            "Score":108},
-    
-        {   "Player":"b",
-            "Cards":[   {"Color":"Yellow","Text":"Four","Value":4,"Score":4},
-                        {"Color":"Yellow","Text":"Nine","Value":9,"Score":9},
-                        {"Color":"Green","Text":"Five","Value":5,"Score":5},
-                        {"Color":"Green","Text":"Draw2","Value":10,"Score":20},
-                        {"Color":"Blue","Text":"Six","Value":6,"Score":6},
-                        {"Color":"Blue","Text":"Seven","Value":7,"Score":7},
-                        {"Color":"Blue","Text":"Skip","Value":11,"Score":20} ],
-            "Score":71},
-    
-        {   "Player":"c",
-            "Cards":[   {"Color":"Red","Text":"Eight","Value":8,"Score":8},
-                        {"Color":"Red","Text":"Draw2","Value":10,"Score":20},
-                        {"Color":"Red","Text":"Reverse","Value":12,"Score":20},
-                        {"Color":"Yellow","Text":"Nine","Value":9,"Score":9},
-                        {"Color":"Green","Text":"Zero","Value":0,"Score":0},
-                        {"Color":"Green","Text":"Seven","Value":7,"Score":7},
-                        {"Color":"Black","Text":"ChangeColor","Value":14,"Score":50} ],
-            "Score":114},
-    
-        {   "Player":"d",
-            "Cards":[   {"Color":"Red","Text":"One","Value":1,"Score":1},
-                        {"Color":"Red","Text":"Eight","Value":8,"Score":8},
-                        {"Color":"Yellow","Text":"Six","Value":6,"Score":6},
-                        {"Color":"Green","Text":"Two","Value":2,"Score":2},
-                        {"Color":"Green","Text":"Three","Value":3,"Score":3},
-                        {"Color":"Green","Text":"Six","Value":6,"Score":6},
-                        {"Color":"Blue","Text":"Seven","Value":7,"Score":7} ],
-            "Score":33}
-        ],
-    "NextPlayer":"a",
-    "TopCard":{"Color":"Blue","Text":"Zero","Value":0,"Score":0}
-    }
-
-    let infoPlayer1 = startinhalt.Players[0];
-    console.log(infoPlayer1)
-    /*da kommt retour:
-    Object {    Player: "a", 
-                Cards: Array(7) [ {…}, {…}, {…}, … ],
-                Score: 115
-            }
-
-            //karte selbst:
-    // <img src="...." class="rounded mx-auto d-block">
-    
-    document.querySelector("#cards ul").addEventListener("mouseover",function(event){
-        event.target.classList.toggle("select")
-    });
-    
-    document.querySelector("#cards ul").addEventListener("click",function(event){
-        console.log(event.target);
-        console.log(event.currentTarget);
-    
-        event.target.classLis.toggle("selected")
-    });
-
-
-function convertNumber(cardValue) {
-    if (cardValue < 15)
-        return cardValue
-
-
 }
 
+/*function convertNumber(cardValue) {
+    if (cardValue < 15)
+        return cardValue
+}
 
 function convertToText(cardValue) {
     if (cardValue  != Number)
@@ -223,30 +151,35 @@ function convertToText(cardValue) {
         case "wild": return 14;
     }
 }
-    */
+*/
 
-}
 
 //Aktiver Spieler:
+/*
+function blurUnactivPlayer() {
+    document.getElementById('spielerkarten1u2').addEventListener('blur',(event) => {
+        event.target.style.background = '';});
+    document.getElementById('spielerkarten3u4').addEventListener('blur', (event) => {
+        event.target.style.background = '';});
+}
 
-function blurUnactivPlayer(player){
-    let p1 = document.getElementsByTagName("h4")
+function focusActivPlayer(player){
+    let p1 = document.querySelector('#h4').value;
     
-    p1.addEventListener('blur',(event) => {
-        event.target.style.background = '';
-    });
-    console.log(p1);
+    console.log("p1 Array: " + p1);
+    console.log("activePlayer is: " + player);
 
     for(let i = 0; i < p1.length; i++){
-        if(element.textContent == aktiverSpieler){
-            console.log("textContent: " + element.textContent);
-            console.log("aktivPlayer: " + aktiverSpieler);
-            p1[i].addEventListener('focus');
+        if(i == player){
+            console.log("textContent of p1[1]: " + i);
+            p1[i].addEventListener('focus', (event) => {
+                event.target.style.background = 'black';
+              });
         }
     }
 }
 
-
+*/
 
 /*
     p1.forEach(element => {
