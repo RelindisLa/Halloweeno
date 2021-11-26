@@ -136,14 +136,24 @@ function erstelltHebestapel(){
 //Aktiver Spieler:
 //blurUnactivPlayer();
 function focusAktivPlayer(aktiverSpieler){
+    document.getElementById('spielerkarten1u2').addEventListener("blur", () => form.classList.remove('focused'), true);
+    document.getElementById('spielerkarten3u4').addEventListener("blur", () => form.classList.remove('focused'), true);
+
     let imFocus = document.getElementById(aktiverSpieler);
     let divDarueber = imFocus.parentNode;
-    divDarueber.focus();
-
+    divDarueber.addEventListener("focus", () => form.classList.add('focused'), true);
+    
     imFocus.addEventListener('click', playCard);
 }
 
 function playCard(){
+    //Spiellogik - > nur gültige Karten spielen:
+
+
+    //sonst:
+
+    //wenn gültig:
+    
 
 }
 
@@ -179,15 +189,6 @@ async function drawCard() {
         aktiverSpieler = newCard.NextPlayer;
     }
 }
-
-
-
-
-
-
-
-
-
 
 function addCard(el){
 
