@@ -958,7 +958,7 @@ Hier ist das Bild für den FireFly Hintergund
   background-size: cover;
 }
 canvas{
-  filter: blur(3px);
+  filter: blur(1px);
 }
 
 
@@ -967,7 +967,14 @@ Hier ist der Code für die Player
 -----------------------------------------------------------------------------------------------*/
 
 #spielfeld {
-  color: rgb(104, 93, 93);
+  color: rgb(224, 223, 223);
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  text-shadow: 2px 2px 4px #fff;
+  text-shadow: 2px 2px 4px rgb(139, 224, 206);
+}
+
+#spielerkarten1u2 {
+  filter: blur(3px);
+}
+#spielerkarten3u4 {
+  filter: blur(3px);
 }
