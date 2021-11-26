@@ -180,6 +180,15 @@ async function drawCard() {
     }
 }
 
+
+
+
+
+
+
+
+
+
 function addCard(el){
 
     let wo = document.getElementById(aktiverSpieler);
@@ -192,7 +201,6 @@ function addCard(el){
         img.setAttribute("style", "height: 80px; padding: 10px");
         wo.appendChild(div);
         div.appendChild(img);
-
 }
 
 
