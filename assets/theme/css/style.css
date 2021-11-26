@@ -978,3 +978,7 @@ Hier ist der Code für die Player
 #spielerkarten3u4 {
   filter: blur(3px);
 }
+
+div:focus {
+  background-color: Aqua;
+}

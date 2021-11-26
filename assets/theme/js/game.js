@@ -29,8 +29,8 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
     startGame();
     evt.preventDefault();
     myModal.hide();
-    console.log("Spielid ausserhalb response " + spielID);
-    console.log("Startspieler ausserhalb response  " + aktiverSpieler);
+    
+    //hier muss noch der Focus hin  --------------------------- !!!
 
 })
 
@@ -61,6 +61,7 @@ async function startGame() {
         erstelltHebestapel();
         aktiverSpieler = startinhalt.NextPlayer;
         console.log("Startspieler im response: " + aktiverSpieler);
+        focusAktivPlayer(aktiverSpieler);
     }
 }
 
@@ -134,6 +135,17 @@ function erstelltHebestapel(){
 
 //Aktiver Spieler:
 //blurUnactivPlayer();
+function focusAktivPlayer(aktiverSpieler){
+    let imFocus = document.getElementById(aktiverSpieler);
+    let divDarueber = imFocus.parentNode;
+    divDarueber.focus();
+
+    imFocus.addEventListener('click', playCard);
+}
+
+function playCard(){
+
+}
 
 /*
 function blurUnactivPlayer() {
@@ -144,15 +156,13 @@ function blurUnactivPlayer() {
 }
 
 
-function startspieler(startinhalt){
-    aktiverSpieler = startinhalt.NextPlayer;
-}
+style> .focused { outline: 1px solid red; } </style>
 
-function saveSpielId(startinhalt){
-    let responseID = startinhalt.Id;
-    return responseID;
-}
-
+<script>
+  // put the handler on capturing phase (last argument true)
+  form.addEventListener("focus", () => form.classList.add('focused'), true);
+  form.addEventListener("blur", () => form.classList.remove('focused'), true);
+</script>
 */
 
 // Karte ziehen
