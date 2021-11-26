@@ -1,7 +1,7 @@
 const baseUrl = "assets/images/card/";
-let aktiverSpieler = [];
-let playerliste = [];
-let spielID = 0;
+let aktiverSpieler;
+let playerliste;
+let spielID;
 let sp1 = {};
 let sp2 = {};
 let sp3 = {};
@@ -29,6 +29,9 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
     startGame();
     evt.preventDefault();
     myModal.hide();
+    console.log("Spielid ausserhalb response " + spielID);
+    console.log("Startspieler ausserhalb response  " + aktiverSpieler);
+
 })
 
 
@@ -44,34 +47,22 @@ async function startGame() {
     });
     if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
         let startinhalt = await response.json(); // response Body auslesen
-        erstPositionen(startinhalt);
-        spielID = saveSpielId(startinhalt);
+
         spielID = startinhalt.Id;
         console.log("Spielid im response " + spielID);
         erstelltAblage(startinhalt);
-        erstelltHebestapel();
-        //AktiverSpieler:
-        startspieler(startinhalt);
-        aktiverSpieler = startinhalt.NextPlayer;
-        console.log("Startspieler im response: " + aktiverSpieler);
         sp1 = startinhalt.Players[0];
+        console.log("Sp1: " + sp1 + ", Sp2: " + sp2);
         sp2 = startinhalt.Players[1];
         sp3 = startinhalt.Players[2];
         sp4 = startinhalt.Players[3];
+
+        erstPositionen(startinhalt);
+        erstelltHebestapel();
+        aktiverSpieler = startinhalt.NextPlayer;
+        console.log("Startspieler im response: " + aktiverSpieler);
     }
 }
-
-function startspieler(startinhalt){
-    aktiverSpieler = startinhalt.NextPlayer;
-}
-console.log("Startspieler ausserhalb response  " + aktiverSpieler);
-
-function saveSpielId(startinhalt){
-    let responseID = startinhalt.Id;
-    return responseID;
-}
-console.log("Spielid ausserhalb response " + spielID);
-
 
 function erstPositionen(startinhalt){
  //Karten der Spieler positionieren:
@@ -139,10 +130,6 @@ function erstelltHebestapel(){
 }
 
 
-console.log("Alle Spieler: " + sp1 + ", " + sp2 + ", " + sp3 + ", " + sp4);
-console.log("sp1.ll" + sp1.Player);
-console.log("spielid: " + spielID);
-
 
 
 //Aktiver Spieler:
@@ -155,6 +142,17 @@ function blurUnactivPlayer() {
     document.getElementById('spielerkarten3u4').addEventListener('blur', (event) => {
         event.target.style.background = '';});
 }
+
+
+function startspieler(startinhalt){
+    aktiverSpieler = startinhalt.NextPlayer;
+}
+
+function saveSpielId(startinhalt){
+    let responseID = startinhalt.Id;
+    return responseID;
+}
+
 */
 
 // Karte ziehen
@@ -167,23 +165,22 @@ async function drawCard() {
     if (response.ok) { 
         newCard = await response.json(); // response Body auslesen
         console.log(newCard);
-        addCard(newCard.Player,newCard.Card);
+        addCard(newCard.Card);
         aktiverSpieler = newCard.NextPlayer;
     }
 }
 
-function addCard(player, el){
+function addCard(el){
 
-    let wo = document.getElementById(player.Player);
-    let divA = document.createElement("div");
-        const div = document.createElement("div");
+    let wo = document.getElementById(aktiverSpieler);
+    let div = document.createElement("div");
         div.setAttribute("style", "display: inline-block");
         const img = document.createElement("img");
         const card = `${el.Color}${el.Value}`;
         img.src = `${baseUrl}${card}.png`;
         img.setAttribute("class","rounded d-block");
         img.setAttribute("style", "height: 80px; padding: 10px");
-        divA.appendChild(div);
+        wo.appendChild(div);
         div.appendChild(img);
 
 }
