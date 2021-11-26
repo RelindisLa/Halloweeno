@@ -2,10 +2,6 @@ const baseUrl = "assets/images/card/";
 let aktiverSpieler;
 let playerliste;
 let spielID;
-let sp1 = {};
-let sp2 = {};
-let sp3 = {};
-let sp4 = {};
 
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
 myModal.show();
@@ -29,7 +25,6 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
     startGame();
     evt.preventDefault();
     myModal.hide();
-    
     //hier muss noch der Focus hin  --------------------------- !!!
 
 
@@ -52,12 +47,6 @@ async function startGame() {
         spielID = startinhalt.Id;
         console.log("Spielid im response " + spielID);
         erstelltAblage(startinhalt);
-        sp1 = startinhalt.Players[0];
-        console.log("Sp1: " + sp1 + ", Sp2: " + sp2);
-        sp2 = startinhalt.Players[1];
-        sp3 = startinhalt.Players[2];
-        sp4 = startinhalt.Players[3];
-
         erstPositionen(startinhalt);
         erstelltHebestapel();
         aktiverSpieler = startinhalt.NextPlayer;
@@ -110,77 +99,105 @@ function erstPositionen(startinhalt){
 function erstelltAblage(startinhalt){
 //Ablagestapel:
     let wo1 = document.getElementById("ablagestapel");
-    const div1 = document.createElement("div");
     let img1 = document.createElement("img");
     img1.setAttribute("style", "text-align: center; height: 100px;");
     const ablageCard = `${startinhalt.TopCard.Color}${startinhalt.TopCard.Value}`;
     img1.src = `${baseUrl}${ablageCard}.png`;
-    wo1.appendChild(div1);
-    div1.appendChild(img1);
+    wo1.appendChild(img1);
 }
 
 function erstelltHebestapel(){
 //Hebestapel:
     let wo2 = document.getElementById("hebestapel");
-    const div2 = document.createElement("div");
     let img2 = document.createElement("img");
     img2.setAttribute("style", "text-align: center; height: 100px; width:100%");
     const hebeCard = "Back0";
     img2.src = `${baseUrl}${hebeCard}.png`;
-    wo2.appendChild(div2);
-    div2.appendChild(img2);
+    wo2.appendChild(img2);
 }
 
-
+//Blur alle Spieler:
 function unfocus(){
-    let p1u2 = document.getElementById('spielerkarten1u2');
-    p1u2.children.classList.add('unfocused');
-    let p3u4 = document.getElementById('spielerkarten3u4');
-    p3u4.children.classList.add('unfocused');
+    let counter = 1;
+
+    while(counter<5){
+    let wohin = "playerName" + counter;
+    document.getElementById(wohin).classList.add('unfocus');
     console.log('FOCUS LOST!');
+    counter++;
+    }
 }
 
-//Aktiver Spieler:
-//blurUnactivPlayer();
+//Aktiver Spieler --> focus + ....
 function focusAktivPlayer(aktiverSpieler){
     unfocus();
-    let imFocus = document.getElementById(aktiverSpieler);
-    let divDarueber = imFocus.parentNode;
-    divDarueber.classList.remove('unfocused');
-    console.log("focued");
-    
-    imFocus.addEventListener('click', playCard);
+    let aP = document.getElementById(aktiverSpieler);
+    aP.parentNode.classList.remove('unfocus');
+
+    aP.addEventListener('click', playCard, true);
+    gewinner();
+    //get next Player
+
 
 }
 
-function playCard(){
+function playCard(){  
     //Spiellogik - > nur gültige Karten spielen:
+    let topKarte = document.getElementById('ablagestapel').childNodes;
+    alert(topKarte.getAttribute('src'));
 
 
+    let value = topKarte.Value;
+    let color = topKarte.Color;
+    let aP = document.getElementById(aktiverSpieler).childNodes;
+    aP.filter(element => 
+        element.Value !== value || element.Color !== color || element.Color !== 'Black');
+    
     //sonst:
+    aP.add('shake');
 
     //wenn gültig:
+    let ablage = document.getElementById('ablagestapel');
+    ablage.addEventListener('change', karteAblegen);
+    
 
 
-}
-
-/*
-function blurUnactivPlayer() {
-    document.getElementById('spielerkarten1u2').addEventListener('blur',(event) => {
-        event.target.style.background = '';});
-    document.getElementById('spielerkarten3u4').addEventListener('blur', (event) => {
-        event.target.style.background = '';});
-}
-
-
-style> .focused { outline: 1px solid red; } </style>
-
-<script>
-  // put the handler on capturing phase (last argument true)
-  form.addEventListener("focus", () => form.classList.add('focused'), true);
-  form.addEventListener("blur", () => form.classList.remove('focused'), true);
-</script>
+    /*
+array.filter(log2File); -> nur Namen hinschreiben - dann wird die Funktion übergeben
+!!!===== keine Klammern - sonst wird das Ergebnis der Funktion übergeben ======!!!
+function log2File(e,i,arr){..tut was auch immer...};  --> die Funktion wird irgendwo fixiert
+log2File(); -> und irgendwo aufgerufen
 */
+
+}
+
+async function karteAblegen(){
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`, {
+        method: 'PUT',
+    });
+    let responseInfo;
+    if (response.ok) { 
+        responseInfo = await response.json();
+        console.log(responseInfo);
+        if(responseInfo.error == 'WrongColor'){
+            alert("Diese Karte hat die falsche Farbe!");
+        } else if(responseInfo.error == 'IncorrectPlayer'){
+            alert("Du bis nicht dran!");
+        } else {
+            aktiverSpieler = responseInfo.Player;
+        }
+
+
+
+    }
+}
+
+function gewinner(){
+    let aP = document.getElementById(aktiverSpieler);
+    if(!aP.hasChildNodes()){
+        alert("Du hast gewonnen!!!");
+    }
+}
 
 // Karte ziehen
 document.getElementById('hebestapel').addEventListener('click', drawCard);
@@ -197,8 +214,8 @@ async function drawCard() {
     }
 }
 
+//gezogene Karte dem Spieler hinzufügen
 function addCard(el){
-
     let wo = document.getElementById(aktiverSpieler);
     let div = document.createElement("div");
         div.setAttribute("style", "display: inline-block");
