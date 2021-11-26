@@ -32,6 +32,7 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
     
     //hier muss noch der Focus hin  --------------------------- !!!
 
+
 })
 
 
@@ -131,19 +132,25 @@ function erstelltHebestapel(){
 }
 
 
-
+function unfocus(){
+    let p1u2 = document.getElementById('spielerkarten1u2');
+    p1u2.children.classList.add('unfocused');
+    let p3u4 = document.getElementById('spielerkarten3u4');
+    p3u4.children.classList.add('unfocused');
+    console.log('FOCUS LOST!');
+}
 
 //Aktiver Spieler:
 //blurUnactivPlayer();
 function focusAktivPlayer(aktiverSpieler){
-    document.getElementById('spielerkarten1u2').addEventListener("blur", () => form.classList.remove('focused'), true);
-    document.getElementById('spielerkarten3u4').addEventListener("blur", () => form.classList.remove('focused'), true);
-
+    unfocus();
     let imFocus = document.getElementById(aktiverSpieler);
     let divDarueber = imFocus.parentNode;
-    divDarueber.addEventListener("focus", () => form.classList.add('focused'), true);
+    divDarueber.classList.remove('unfocused');
+    console.log("focued");
     
     imFocus.addEventListener('click', playCard);
+
 }
 
 function playCard(){
@@ -153,7 +160,7 @@ function playCard(){
     //sonst:
 
     //wenn gültig:
-    
+
 
 }
 

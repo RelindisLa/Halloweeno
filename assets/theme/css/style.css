@@ -972,19 +972,16 @@ Hier ist der Code für die Player
   text-shadow: 2px 2px 4px rgb(139, 224, 206);
 }
 
-/*#spielerkarten1u2 {
-  filter: blur(3px);
+#spielerkarten1u2 {
+  text-align: left;
 }
-
-
+#ablageHebeStapel {
+  text-align: center;
+}
 #spielerkarten3u4 {
-  filter: blur(3px);
+  text-align: right;
 }
-*/
 
-.focus:not(true) {
+.unfocused {
   filter: blur(3px);
-}
-.focus {
-  background-color: Aqua;
 }
