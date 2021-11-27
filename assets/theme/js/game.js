@@ -98,7 +98,7 @@ function erstPositionen(startinhalt){
          const div = document.createElement("div");
          div.setAttribute("style", "display: inline-block");
          const img = document.createElement("img");
-         const card = `${el.Color}${el.Value}`;
+         const card = `${el.Color}0${el.Value}`;
          img.src = `${baseUrl}${card}.png`;
          img.setAttribute("class","rounded d-block");
          img.setAttribute("style", "height: 80px; padding: 10px");
@@ -114,6 +114,7 @@ function erstelltAblage(startinhalt){
     let wo1 = document.getElementById("ablagestapel");
     let img1 = document.createElement("img");
     img1.setAttribute("style", "text-align: center; height: 100px;");
+    img1.setAttribute("class", "ablage123");
     const ablageCard = `${startinhalt.TopCard.Color}${startinhalt.TopCard.Value}`;
     img1.src = `${baseUrl}${ablageCard}.png`;
     wo1.appendChild(img1);
@@ -156,11 +157,59 @@ function focusAktivPlayer(aktiverSpieler){
 
 }
 
+
 function playCard(){  
+
+    let valueArray;
+    let color;
     //Spiellogik - > nur gültige Karten spielen:
-    let topKarte = document.getElementById('ablagestapel').childNodes;
-    let counter = 0;
-    console.log(topKarte);
+    let topKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
+
+    alert(topKarte);
+    //assets/images/card/Red4.png
+
+    valueArray = topKarte.split('').slice(-6,-4);
+    let value = `${valueArray[0]}${valueArray[1]}`;
+    if(topKarte.includes('Red') == true){
+        color = 'Red';
+    } else if(topKarte.includes('Blue') == true){
+        color = 'Blue';
+    } else if(topKarte.includes('Green') == true){
+        color = 'Green';     
+    } else if(topKarte.includes('Yellow') == true){
+        color = 'Yellow';
+    } else {
+        alert("Falsche Ablagekarte ausgelesen")
+    }
+
+    console.log("Ablage: " + value + ", "+ color);
+    console.log("this ClickEvent: "  + this);
+    if(this.Value == value){
+        //karte versenden
+        let ablage = document.getElementById('ablagestapel');
+        ablage.addEventListener('change', karteAblegen);
+    } else if(this.Color == color){
+        //karte versenden
+        let ablage = document.getElementById('ablagestapel');
+        ablage.addEventListener('change', karteAblegen);
+    } else {
+        //shake karte
+        aP.add('shake');
+    }
+
+
+    
+
+}
+
+
+
+
+
+
+    /*
+
+    .getAttribute('src');
     topKarte.forEach(element => {
         let temp = element.getAttribute.img('src');
     console.log(temp);
@@ -172,7 +221,8 @@ function playCard(){
     let aP = document.getElementById(aktiverSpieler).childNodes;
     aP.filter(element => 
         element.Value !== value || element.Color !== color || element.Color !== 'Black');
-    
+
+
     //sonst:
     aP.add('shake');
 
@@ -210,8 +260,6 @@ function doThis(callback) {
   callback()
 }
 */
-
-}
 
 async function karteAblegen(){
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`, {
