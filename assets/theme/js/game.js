@@ -1,7 +1,8 @@
 const baseUrl = "assets/images/card/";
-let aktiverSpieler;
+let aktiverSpieler = 'undefined';
 let playerliste;
 let spielID;
+let exit = false;
 
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
 myModal.show();
@@ -22,16 +23,13 @@ document.getElementById('playerNamesForm').addEventListener('keyup', function (e
 });
 
 document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
-    startGame();
+    startGame(gameLoop);
     evt.preventDefault();
     myModal.hide();
-    //hier muss noch der Focus hin  --------------------------- !!!
-
-
 })
 
 
-async function startGame() {
+async function startGame(callback){
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
         body: JSON.stringify(
@@ -51,8 +49,23 @@ async function startGame() {
         erstelltHebestapel();
         aktiverSpieler = startinhalt.NextPlayer;
         console.log("Startspieler im response: " + aktiverSpieler);
-        focusAktivPlayer(aktiverSpieler);
     }
+    callback()
+}
+
+function gameLoop(){
+    console.log("Spielid im gameLoop " + spielID);
+    console.log("Startspieler im gameLoop: " + aktiverSpieler);
+
+    focusAktivPlayer(aktiverSpieler);
+
+    //aus altem Code kopiert:
+        //while (!exit) {}
+        //readUserInput();
+        //updateState();
+        //printState();
+
+
 }
 
 function erstPositionen(startinhalt){
@@ -135,7 +148,9 @@ function focusAktivPlayer(aktiverSpieler){
     aP.parentNode.classList.remove('unfocus');
 
     aP.addEventListener('click', playCard, true);
-    gewinner();
+    //prüft karte
+    //let karte ab
+    //prüft gewinner
     //get next Player
 
 
@@ -144,11 +159,16 @@ function focusAktivPlayer(aktiverSpieler){
 function playCard(){  
     //Spiellogik - > nur gültige Karten spielen:
     let topKarte = document.getElementById('ablagestapel').childNodes;
-    alert(topKarte.getAttribute('src'));
+    let counter = 0;
+    console.log(topKarte);
+    topKarte.forEach(element => {
+        let temp = element.getAttribute.img('src');
+    console.log(temp);
+    counter++;
+    });
 
-
-    let value = topKarte.Value;
-    let color = topKarte.Color;
+    let value = atr0.Value;
+    let color = atr1.Color;
     let aP = document.getElementById(aktiverSpieler).childNodes;
     aP.filter(element => 
         element.Value !== value || element.Color !== color || element.Color !== 'Black');
@@ -167,6 +187,28 @@ array.filter(log2File); -> nur Namen hinschreiben - dann wird die Funktion über
 !!!===== keine Klammern - sonst wird das Ergebnis der Funktion übergeben ======!!!
 function log2File(e,i,arr){..tut was auch immer...};  --> die Funktion wird irgendwo fixiert
 log2File(); -> und irgendwo aufgerufen
+
+
+// Execute the function "doThis" with another function as parameter, in this case "andThenThis". 
+//doThis will execute whatever code it has and when it finishes it should have "andThenThis" being executed.
+
+doThis(andThenThis)
+
+// Inside of "doThis" it's referenced as "callback" which is just a variable that is holding the reference to this function
+
+function andThenThis() {
+  console.log('and then this')
+}
+
+// You can name it whatever you want, "callback" is common approach
+
+function doThis(callback) {
+  console.log('this first')
+  
+  // the '()' is when you are telling your code to execute the function reference else it will just log the reference
+  
+  callback()
+}
 */
 
 }
@@ -185,17 +227,18 @@ async function karteAblegen(){
             alert("Du bis nicht dran!");
         } else {
             aktiverSpieler = responseInfo.Player;
+  
         }
-
-
-
     }
+    gewinner();
+    focusAktivPlayer();
 }
 
 function gewinner(){
     let aP = document.getElementById(aktiverSpieler);
     if(!aP.hasChildNodes()){
         alert("Du hast gewonnen!!!");
+        //exit = true;
     }
 }
 
