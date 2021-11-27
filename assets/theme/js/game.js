@@ -34,7 +34,7 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
     myModal.hide();
 });
 
-async function startGame(callback){
+async function startGame(callback) {
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
         body: JSON.stringify(
@@ -58,17 +58,17 @@ async function startGame(callback){
     callback()
 }
 
-function gameLoop(){
+function gameLoop() {
     console.log("Spielid im gameLoop " + spielID);
     console.log("Startspieler im gameLoop: " + aktiverSpieler);
 
     focusAktivPlayer(aktiverSpieler);
 
     //aus altem Code kopiert:
-        //while (!exit) {}
-        //readUserInput();
-        //updateState();
-        //printState();
+    //while (!exit) {}
+    //readUserInput();
+    //updateState();
+    //printState();
 
 
 }
@@ -122,7 +122,7 @@ function erstelltAblage(startinhalt) {
     let img1 = document.createElement("img");
     img1.setAttribute("style", "text-align: center; height: 100px;");
     img1.setAttribute("class", "ablage123");
-    const ablageCard = `${startinhalt.TopCard.Color}${startinhalt.TopCard.Value}`;
+    const ablageCard = `${startinhalt.TopCard.Color}0${startinhalt.TopCard.Value}`;
     img1.src = `${baseUrl}${ablageCard}.png`;
     wo1.appendChild(img1);
 }
@@ -173,7 +173,7 @@ function playCard(){
     let topKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
 
     alert(topKarte);
-    //assets/images/card/Red4.png
+    //assets/images/card/Red04.png
 
     valueArray = topKarte.split('').slice(-6,-4);
     let value = `${valueArray[0]}${valueArray[1]}`;
@@ -219,8 +219,8 @@ function playCard(){
     .getAttribute('src');
     topKarte.forEach(element => {
         let temp = element.getAttribute.img('src');
-    console.log(temp);
-    counter++;
+        console.log(temp);
+        counter++;
     });
 
     let value = atr0.Value;
