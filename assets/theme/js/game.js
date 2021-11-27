@@ -74,46 +74,46 @@ function gameLoop() {
 }
 
 
-function erstPositionen(startinhalt){
- //Karten der Spieler positionieren:
- let counter = 1;
- startinhalt.Players.forEach(element => {
-     let wohin = "playerName" + counter;
-     let wo = document.getElementById(wohin);
-     wo.setAttribute("style", "text-align: center;");
-     wo.setAttribute("class", "row");
-     wo.setAttribute("style", "display: block");
-     wo.setAttribute("class", element.Player);
+function erstPositionen(startinhalt) {
+    //Karten der Spieler positionieren:
+    let counter = 1;
+    startinhalt.Players.forEach(element => {
+        let wohin = "playerName" + counter;
+        let wo = document.getElementById(wohin);
+        wo.setAttribute("style", "text-align: center;");
+        wo.setAttribute("class", "row");
+        wo.setAttribute("style", "display: block");
+        wo.setAttribute("class", element.Player);
 
-     let nameH4 = document.createElement("h4");
-     nameH4.setAttribute("style", "text-align: center");
-     let textName = document.createTextNode(element.Player);
-     wo.appendChild(nameH4);
-     nameH4.appendChild(textName);
+        let nameH4 = document.createElement("h4");
+        nameH4.setAttribute("style", "text-align: center");
+        let textName = document.createTextNode(element.Player);
+        wo.appendChild(nameH4);
+        nameH4.appendChild(textName);
 
-     let playerScore = document.createElement("p");
-     playerScore.setAttribute("style", "text-align: center; padding-top: 10px");
-     let textScore = document.createTextNode("Score: " + element.Score);
-     wo.appendChild(playerScore);
-     playerScore.appendChild(textScore);
+        let playerScore = document.createElement("p");
+        playerScore.setAttribute("style", "text-align: center; padding-top: 10px");
+        let textScore = document.createTextNode("Score: " + element.Score);
+        wo.appendChild(playerScore);
+        playerScore.appendChild(textScore);
 
-     let divA = document.createElement("div");
-     divA.setAttribute("id", element.Player);
-     wo.appendChild(divA);
-     element.Cards.forEach(el => {
-         const div = document.createElement("div");
-         div.setAttribute("style", "display: inline-block");
-         const img = document.createElement("img");
-         const card = `${el.Color}0${el.Value}`;
-         img.src = `${baseUrl}${card}.png`;
-         img.setAttribute("class","rounded d-block");
-         img.setAttribute("style", "height: 80px; padding: 10px");
-         divA.appendChild(div);
-         div.appendChild(img);
-     })
+        let divA = document.createElement("div");
+        divA.setAttribute("id", element.Player);
+        wo.appendChild(divA);
+        element.Cards.forEach(el => {
+            const div = document.createElement("div");
+            div.setAttribute("style", "display: inline-block");
+            const img = document.createElement("img");
+            const card = `${el.Color}0${el.Value}`;
+            img.src = `${baseUrl}${card}.png`;
+            img.setAttribute("class", "rounded d-block");
+            img.setAttribute("style", "height: 80px; padding: 10px");
+            divA.appendChild(div);
+            div.appendChild(img);
+        })
 
-     counter++;
- });
+        counter++;
+    });
 }
 
 function erstelltAblage(startinhalt) {
@@ -164,7 +164,7 @@ function focusAktivPlayer(aktiverSpieler) {
 
 }
 
-function playCard(){  
+function playCard() {
 
     let valueArray;
     let color;
@@ -175,27 +175,26 @@ function playCard(){
     alert(topKarte);
     //assets/images/card/Red04.png
 
-    valueArray = topKarte.split('').slice(-6,-4);
+    valueArray = topKarte.split('').slice(-6, -4);
     let value = `${valueArray[0]}${valueArray[1]}`;
-    if(topKarte.includes('Red') == true){
+    if (topKarte.includes('Red') == true) {
         color = 'Red';
-    } else if(topKarte.includes('Blue') == true){
+    } else if (topKarte.includes('Blue') == true) {
         color = 'Blue';
-    } else if(topKarte.includes('Green') == true){
-        color = 'Green';     
-    } else if(topKarte.includes('Yellow') == true){
+    } else if (topKarte.includes('Green') == true) {
+        color = 'Green';
+    } else if (topKarte.includes('Yellow') == true) {
         color = 'Yellow';
     } else {
         alert("Falsche Ablagekarte ausgelesen")
     }
 
-    console.log("Ablage: " + value + ", "+ color);
-    console.log("this ClickEvent: "  + this);
-    if(this.Value == value){
-        //karte versenden
-        let ablage = document.getElementById('ablagestapel');
-        ablage.addEventListener('change', karteAblegen);
-    } else if(this.Color == color){
+    console.log("Ablage: " + value + ", " + color);
+    console.log("this ClickEvent: " + this);
+    if (this.color == 'Black') {
+        farbwechsel();
+    }
+    if (this.Value == value || this.Color == color) {
         //karte versenden
         let ablage = document.getElementById('ablagestapel');
         ablage.addEventListener('change', karteAblegen);
@@ -205,39 +204,38 @@ function playCard(){
     }
 
 
-    
+}
 
+function farbwechsel() {
+    let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
+    chooseColorModal.show();
 }
 
 
+/*
+
+.getAttribute('src');
+topKarte.forEach(element => {
+    let temp = element.getAttribute.img('src');
+    console.log(temp);
+    counter++;
+});
+
+let value = atr0.Value;
+let color = atr1.Color;
+let aP = document.getElementById(aktiverSpieler).childNodes;
+aP.filter(element =>
+    element.Value !== value || element.Color !== color || element.Color !== 'Black');
+
+//sonst:
+aP.add('shake');
+
+//wenn gültig:
+let ablage = document.getElementById('ablagestapel');
+ablage.addEventListener('change', karteAblegen);
 
 
-
-
-    /*
-
-    .getAttribute('src');
-    topKarte.forEach(element => {
-        let temp = element.getAttribute.img('src');
-        console.log(temp);
-        counter++;
-    });
-
-    let value = atr0.Value;
-    let color = atr1.Color;
-    let aP = document.getElementById(aktiverSpieler).childNodes;
-    aP.filter(element =>
-        element.Value !== value || element.Color !== color || element.Color !== 'Black');
-
-    //sonst:
-    aP.add('shake');
-
-    //wenn gültig:
-    let ablage = document.getElementById('ablagestapel');
-    ablage.addEventListener('change', karteAblegen);
-
-
-    /*
+/*
 array.filter(log2File); -> nur Namen hinschreiben - dann wird die Funktion übergeben
 !!!===== keine Klammern - sonst wird das Ergebnis der Funktion übergeben ======!!!
 function log2File(e,i,arr){..tut was auch immer...};  --> die Funktion wird irgendwo fixiert
@@ -252,20 +250,19 @@ doThis(andThenThis)
 // Inside of "doThis" it's referenced as "callback" which is just a variable that is holding the reference to this function
 
 function andThenThis() {
-  console.log('and then this')
+console.log('and then this')
 }
 
 // You can name it whatever you want, "callback" is common approach
 
 function doThis(callback) {
-  console.log('this first')
+console.log('this first')
 
-  // the '()' is when you are telling your code to execute the function reference else it will just log the reference
+// the '()' is when you are telling your code to execute the function reference else it will just log the reference
 
-  callback()
+callback()
 }
 */
-
 
 
 async function karteAblegen() {
