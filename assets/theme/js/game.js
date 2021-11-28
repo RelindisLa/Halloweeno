@@ -365,7 +365,7 @@ function removeTimeout(element) {
 function beginNextPlayer(response) {// value für Abfrage +2/+4
     setTimeout(function () {
         //if (value === '10' || value === '13') { karten holen und zeigen
-        
+
         aktiverSpieler = response.Player;
         document.getElementById(`score${aktiverSpieler}`).innerHTML = `${response.Score}`;
         console.log("neuer spieler ist: " + aktiverSpieler);
@@ -432,72 +432,6 @@ function addCard(el) {
     div.appendChild(img);
 }
 
-
-/*        
-
-if (value === '10' || value === '13') {
-            console.log("playerliste, aktverSpieler " + playerListe + ", " + aktiverSpieler)
-            for (let index = 0; index < playerListe.length; index++) {
-                let needCards = document.getElementById(playerListe[index-1]);
-                //getCardsOf(playerListe[index-1]);
-
-            }
-        }
-
-async function getCardsOf(player) {
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
-        method: 'GET',
-    });
-    let infoPlayerAbfrage;
-    if (response.ok) {
-        infoPlayerAbfrage = await response.json(); // response Body auslesen
-        console.log("+2/+4 übersprSpielerAbfrage: " + JSON.stringify(infoPlayerAbfrage));
-        erstesKartenErstellen(response);
-    }
-}
-
-
-
-async function neueTopCard(callback){
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/topCard/${spielID}`, { 
-        method: 'GET',
-    });
-    let responseAblage;
-    if (response.ok) {
-        responseAblage = await response.json();
-        console.log("Ablage neu: " + responseAblage);
-        
-    }
-    callback();
-} 
-function removeAblagekarte() {
-    let ablageKarte = document.getElementById('ablagestapel');
-    while (ablageKarte.firstChild) {
-        ablageKarte.removeChild(ablageKarte.firstChild);
-    }
-    console.log("AblageKarte " + ablageKarte);
-    //neueTopCard(erstelltAblage);
-    //erstelltAblage(neueTopCard); ------------------------------------------------- !????! Fehler !????! -----------------
-}        
- 
-// Execute the function "doThis" with another function as parameter, in this case "andThenThis".
-//doThis will execute whatever code it has and when it finishes it should have "andThenThis" being executed.
-
-doThis(andThenThis)
-// Inside of "doThis" it's referenced as "callback" which is just a variable that is holding the reference to this function
-
-function andThenThis() {
-console.log('and then this')
-}
-
-// You can name it whatever you want, "callback" is common approach
-function doThis(callback) {
-console.log('this first')
-
-// the '()' is when you are telling your code to execute the function reference else it will just log the reference
-callback()
-}
-*/
 
 
 
