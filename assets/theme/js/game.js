@@ -141,7 +141,6 @@ function unfocus() {
     while (counter < 5) {
         let wohin = "playerName" + counter;
         document.getElementById(wohin).classList.add('unfocus');
-        console.log('FOCUS LOST! AktivPlayer: ' + aktiverSpieler);
         counter++;
     }
 }
@@ -151,7 +150,6 @@ function focusAktivPlayer(aktiverSpieler) {
     unfocus();
     let aP = document.getElementById(aktiverSpieler);
     aP.parentNode.classList.remove('unfocus');
-    console.log('FOCUS AktivPlayer: ' + aktiverSpieler);
 
     playCard();
     //prüft karte
@@ -180,7 +178,7 @@ function playCard() {
 
             let clickKarteInfo = this.getAttribute('src');
             werteClickKarte = getKartenWerte(clickKarteInfo);
-            alert("im Array KartenAttribut auslesen: " + clickKarteInfo);
+            console.log("im Array KartenAttribut auslesen: " + clickKarteInfo);
 
             let colorClick = werteClickKarte[0];
             let valueClick = werteClickKarte[1];
@@ -198,20 +196,23 @@ function playCard() {
 
             if (valueClick == valueAblage || colorClick == colorAblage) {
                 this.setAttribute("id","spielKarteHuiiiii");
-                neueTopCard();
+                //neueTopCard();
+                console.log("valueClick, colorClick, wildColor " + valueClick +", " + colorClick + ", " + wildColor);
                 karteAblegen(valueClick, colorClick, wildColor);
             } else {
-                alert("else");
-                //shake karte
-                this.add('shake');
-
+                //console.log("shake card");
+                this.classList.add('shake');
+                shakeTimeout(this);
             }
-
-        })
-    }
-
+        }) }
     document.getElementById('hebestapel').addEventListener('click', drawCard);
+}
 
+function shakeTimeout(element){
+    setTimeout(function() {
+        element.classList.remove('shake');
+        element.offsetWidth = element.offsetWidth;
+      }, 1000);
 }
 
 function getKartenWerte(topKarte) {
@@ -329,6 +330,7 @@ async function karteAblegen(value, color, wildColor) {
         wildColor = '';
     }
 
+    //console.log(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`);
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`, {
         method: 'PUT',
     });
@@ -357,7 +359,6 @@ async function karteAblegen(value, color, wildColor) {
 
 function unoRufen(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
-    alert("Wie viele Karten hat der Spieler noch? " + aP.childNodes.length)
     if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
         let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufen'));
         unoRufenModal.show();
@@ -365,7 +366,7 @@ function unoRufen(aktiverSpieler) {
         document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
             evt.preventDefault();
             unoRufenModal.hide();
-            alert("unoRufen info: " + evt);
+            alert("unoRufen");
             return evt;
         });
     }
