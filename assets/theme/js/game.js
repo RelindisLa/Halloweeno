@@ -2,6 +2,9 @@ const baseUrl = "assets/images/card/";
 let aktiverSpieler = 'undefined';
 let playerListe;
 let spielID;
+let ablageCard;
+let ablageStapel;
+let ablageBild;
 let exit = false;
 
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
@@ -118,13 +121,13 @@ function erstPositionen(startinhalt) {
 
 function erstelltAblage(startinhalt) {
 //Ablagestapel:
-    let wo1 = document.getElementById("ablagestapel");
-    let img1 = document.createElement("img");
-    img1.setAttribute("style", "text-align: center; height: 100px;");
-    img1.setAttribute("class", "ablage123");
-    const ablageCard = `${startinhalt.TopCard.Color}0${startinhalt.TopCard.Value}`;
-    img1.src = `${baseUrl}${ablageCard}.png`;
-    wo1.appendChild(img1);
+    ablageStapel = document.getElementById("ablagestapel");
+    ablageBild = document.createElement("img");
+    ablageBild.setAttribute("style", "text-align: center; height: 100px;");
+    ablageBild.setAttribute("class", "ablage123");
+    ablageCard = `${startinhalt.TopCard.Color}0${startinhalt.TopCard.Value}`;
+    ablageBild.src = `${baseUrl}${ablageCard}.png`;
+    ablageStapel.appendChild(ablageBild);
 }
 
 function erstelltHebestapel() {
@@ -190,7 +193,7 @@ function playCard() {
     }
 
     if (this.color == 'Black') {
-        farbwechsel();
+        farbWechsel();
     }
     if (this.value == '13'){
         //prüfen ob Karte gespielt werden darf
@@ -210,17 +213,37 @@ function playCard() {
 
 }
 
-function farbwechsel() {
+function farbWechsel() {
     let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
     chooseColorModal.show();
-
-    document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
+    document.getElementById('chooseRed').addEventListener('click', function (evt) {
+        ablageCard = 'Red014';
+        ablageBild.src = `${baseUrl}${ablageCard}.png`;
+        ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
         chooseColorModal.hide();
-        alert("Farbwechsel: " + evt);
-        return evt;
     });
-
+    document.getElementById('chooseYellow').addEventListener('click', function (evt) {
+        ablageCard = 'Yellow014';
+        ablageBild.src = `${baseUrl}${ablageCard}.png`;
+        ablageStapel.appendChild(ablageBild);
+        evt.preventDefault();
+        chooseColorModal.hide();
+    });
+    document.getElementById('chooseGreen').addEventListener('click', function (evt) {
+        ablageCard = 'Green014';
+        ablageBild.src = `${baseUrl}${ablageCard}.png`;
+        ablageStapel.appendChild(ablageBild);
+        evt.preventDefault();
+        chooseColorModal.hide();
+    });
+    document.getElementById('chooseBlue').addEventListener('click', function (evt) {
+        ablageCard = 'Blue014';
+        ablageBild.src = `${baseUrl}${ablageCard}.png`;
+        ablageStapel.appendChild(ablageBild);
+        evt.preventDefault();
+        chooseColorModal.hide();
+    });
 }
 
 
