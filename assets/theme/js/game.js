@@ -68,12 +68,6 @@ function gameLoop() {
     console.log("Startspieler im gameLoop: " + aktiverSpieler);
 
     focusAktivPlayer(aktiverSpieler);
-
-    //aus altem Code kopiert:
-    //while (!exit) {}
-    //readUserInput();
-    //updateState();
-    //printState();
 }
 
 
@@ -160,83 +154,11 @@ function focusAktivPlayer(aktiverSpieler) {
     console.log('FOCUS AktivPlayer: ' + aktiverSpieler);
 
     playCard();
-
-    //aP.addEventListener('click', playCard,true);
-
-    /*
-      clickKarte.addEventListener('click', playCard);
-      clickKarte[0].addEventListener('click', playCard,true);
-      alert("abc[0]: " + abc[0].getAttribute('src'));
-      let handkarten = aP.getElementsByTagName('img');
-      for(var i = 0; i < handkarten.length; i++) {
-      clickKarte[0].addEventListener('click', playCard, true);
-      
-      }
-      let handkarten = document.getElementsByClassName(`karte-${aktiverSpieler}`);
-    let sdf = handkarten.parentNode;
-    console.log("handkarten: " + handkarten);
-    for(var i = 0; i < handkarten.length; i++) {
-      handkarten[i].addEventListener('click', playCard(i),true);  
-      console.log("aktuelle Karte: " + handkarten[i]);
-    }
-      
-      */
     //prüft karte
     //let karte ab
     //prüft gewinner
     //get next Player
-
-
 }
-/*
-function playCard(index) {
-    //Spiellogik - > nur gültige Karten spielen:
-    let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
-    let clickKarte = document.getElementsByClassName(`karte-${aktiverSpieler}`)[index];
-    let clickKarteInfo = clickKarte.getAttribute('src');
-    //let clickKarte = karte.getAttribute('src');
-    console.log("ablagekarte: " + ablageKarte);
-    console.log("clickarte: "+ clickKarte);
-    console.log("clickarteInfo: "+ clickKarteInfo);
-        window.addEventListener('click', (e) => functionHandler(e, ...args));
-
-
-
-        var li = document.querySelectorAll("li");
-
-for (let i = 0; i < li.length; i++) {
-  li[i].addEventListener("click", function() {
-    li[i].classList.toggle("done");
-  })
-}
-
-.done {
-  text-decoration: line-through;
-}
-
-
-let imageArray = [];
-gShape = new createjs.Shape();
-// shape is something
-imageArray.push(gShape); // Dumped all the objects
-
-for (let i = 0; i < imageArray.length; i++) {
-  imageArray[i].addEventListener("click", function() {
-    console.log("you clicked region number " + i);
-  });
-}
-
-for(var i = 0; i < imageArray.length; i++) {
-       imageArray[i].addEventListener("click", bindClick(i));
- }
-
- function bindClick(i) {
-    return function() {
-        console.log("you clicked region number " + i);
-    };
- }
-
-    */
 
 function playCard() {
     //Spiellogik - > nur gültige Karten spielen:
@@ -292,7 +214,6 @@ function playCard() {
 
 }
 
-
 function getKartenWerte(topKarte) {
     console.log("in Funktion topKarte: " + topKarte);
     let arr = [];
@@ -329,7 +250,7 @@ function farbWechsel() {
     let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
     chooseColorModal.show();
     document.getElementById('chooseRed').addEventListener('click', function (evt) {
-        ablageCard = 'Red014';
+        ablageCard = 'Red14';
         ablageBild.src = `${baseUrl}${ablageCard}.png`;
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
@@ -337,7 +258,7 @@ function farbWechsel() {
         return colorWechsel = 'Red';
     });
     document.getElementById('chooseYellow').addEventListener('click', function (evt) {
-        ablageCard = 'Yellow014';
+        ablageCard = 'Yellow14';
         ablageBild.src = `${baseUrl}${ablageCard}.png`;
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
@@ -345,7 +266,7 @@ function farbWechsel() {
         return colorWechsel = 'Yellow';
     });
     document.getElementById('chooseGreen').addEventListener('click', function (evt) {
-        ablageCard = 'Green014';
+        ablageCard = 'Green14';
         ablageBild.src = `${baseUrl}${ablageCard}.png`;
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
@@ -353,7 +274,7 @@ function farbWechsel() {
         return colorWechsel = 'Green';
     });
     document.getElementById('chooseBlue').addEventListener('click', function (evt) {
-        ablageCard = 'Blue014';
+        ablageCard = 'Blue14';
         ablageBild.src = `${baseUrl}${ablageCard}.png`;
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
@@ -364,34 +285,6 @@ function farbWechsel() {
 
 
 /*
-
-.getAttribute('src');
-topKarte.forEach(element => {
-    let temp = element.getAttribute.img('src');
-    console.log(temp);
-    counter++;
-});
-
-let value = atr0.Value;
-let color = atr1.Color;
-let aP = document.getElementById(aktiverSpieler).childNodes;
-aP.filter(element =>
-    element.Value !== value || element.Color !== color || element.Color !== 'Black');
-
-//sonst:
-aP.add('shake');
-
-//wenn gültig:
-let ablage = document.getElementById('ablagestapel');
-ablage.addEventListener('change', karteAblegen);
-
-
-/*
-array.filter(log2File); -> nur Namen hinschreiben - dann wird die Funktion übergeben
-!!!===== keine Klammern - sonst wird das Ergebnis der Funktion übergeben ======!!!
-function log2File(e,i,arr){..tut was auch immer...};  --> die Funktion wird irgendwo fixiert
-log2File(); -> und irgendwo aufgerufen
-
 
 // Execute the function "doThis" with another function as parameter, in this case "andThenThis".
 //doThis will execute whatever code it has and when it finishes it should have "andThenThis" being executed.
@@ -488,8 +381,6 @@ function gewinner(aktiverSpieler) {
 }
 
 // Karte ziehen
-
-
 async function drawCard() {
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
         method: 'PUT',

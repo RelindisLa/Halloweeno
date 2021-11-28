@@ -579,8 +579,11 @@ nav .mbr-section-btn {
 
 .navbar-collapse {
   -webkit-flex-basis: 100%;
+  flex-basis: 100%;
   -webkit-flex-grow: 1;
+  flex-grow:1;
   -webkit-align-items: center;
+  align-items: center;
 }
 
 .nav-dropdown .link {
@@ -591,15 +594,18 @@ nav .mbr-section-btn {
 .nav {
   display: -webkit-flex;
   -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .row {
   display: -webkit-flex;
   -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .justify-content-center {
   -webkit-justify-content: center;
+  justify-content: center;
 }
 
 .form-inline {
@@ -608,6 +614,7 @@ nav .mbr-section-btn {
 
 .card-wrapper {
   -webkit-flex: 1;
+  flex: 1;
 }
 
 .carousel-control {
