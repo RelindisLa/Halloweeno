@@ -59,6 +59,7 @@ async function startGame(callback) {
         erstelltHebestapel();
         aktiverSpieler = startinhalt.NextPlayer;
         console.log("Startspieler im response: " + aktiverSpieler);
+        alert("startinhalt: " + JSON.stringify(startinhalt));
     }
     callback()
 }
@@ -189,7 +190,7 @@ function playCard() {
                 wildColor = colorClick;
             }
             if (valueClick == '13') {
-                //prüfen ob Karte gespielt werden darf
+                //prüfen ob Karte gespielt werden darf ???
                 colorClick = farbWechsel();
                 wildColor = colorClick;
             }
@@ -200,7 +201,6 @@ function playCard() {
                 console.log("valueClick, colorClick, wildColor " + valueClick +", " + colorClick + ", " + wildColor);
                 karteAblegen(valueClick, colorClick, wildColor);
             } else {
-                //console.log("shake card");
                 this.classList.add('shake');
                 shakeTimeout(this);
             }
