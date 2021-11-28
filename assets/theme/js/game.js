@@ -39,7 +39,7 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
 });
 
 async function startGame(callback) {
-    playerListe = ["a","b","c","d"]; //  ------------------->--------------------------------->  wird nicht gebraucht beim Modal!!!!
+    playerListe = ["a", "b", "c", "d"]; //  ------------------->--------------------------------->  wird nicht gebraucht beim Modal!!!!
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
         body: JSON.stringify(
@@ -54,7 +54,7 @@ async function startGame(callback) {
 
         spielID = startinhalt.Id;
         console.log("Spielid im response " + spielID);
-        erstelltAblage(startinhalt);
+        erstelltAblage(startinhalt.TopCard);
         erstPositionen(startinhalt);
         erstelltHebestapel();
         aktiverSpieler = startinhalt.NextPlayer;
@@ -107,7 +107,7 @@ function erstPositionen(startinhalt) {
             const div = document.createElement("div");
             div.setAttribute("style", "display: inline-block");
             const img = document.createElement("img");
-            const card = `${el.Color}0${el.Value}`;
+            const card = `${el.Color}${el.Value}`;
             img.src = `${baseUrl}${card}.png`;
             img.setAttribute("class", `karte-${element.Player}`); //rounded d-block ??
             img.setAttribute("style", "height: 80px; padding: 10px");
@@ -119,19 +119,19 @@ function erstPositionen(startinhalt) {
     });
 }
 
-function erstelltAblage(startinhalt) {
-//Ablagestapel:
+function erstelltAblage(card) {
+    //Ablagestapel:
     ablageStapel = document.getElementById("ablagestapel");
     ablageBild = document.createElement("img");
     ablageBild.setAttribute("style", "text-align: center; height: 100px;");
     ablageBild.setAttribute("class", "ablage123");
-    ablageCard = `${startinhalt.TopCard.Color}0${startinhalt.TopCard.Value}`;
+    ablageCard = `${card.Color}${card.Value}`;
     ablageBild.src = `${baseUrl}${ablageCard}.png`;
     ablageStapel.appendChild(ablageBild);
 }
 
 function erstelltHebestapel() {
-//Hebestapel:
+    //Hebestapel:
     let wo2 = document.getElementById("hebestapel");
     let img2 = document.createElement("img");
     img2.setAttribute("style", "text-align: center; height: 100px; width:100%");
@@ -158,29 +158,29 @@ function focusAktivPlayer(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
     aP.parentNode.classList.remove('unfocus');
     console.log('FOCUS AktivPlayer: ' + aktiverSpieler);
-    
+
     playCard();
 
     //aP.addEventListener('click', playCard,true);
-  
-  /*
-    clickKarte.addEventListener('click', playCard);
-    clickKarte[0].addEventListener('click', playCard,true);
-    alert("abc[0]: " + abc[0].getAttribute('src'));
-    let handkarten = aP.getElementsByTagName('img');
+
+    /*
+      clickKarte.addEventListener('click', playCard);
+      clickKarte[0].addEventListener('click', playCard,true);
+      alert("abc[0]: " + abc[0].getAttribute('src'));
+      let handkarten = aP.getElementsByTagName('img');
+      for(var i = 0; i < handkarten.length; i++) {
+      clickKarte[0].addEventListener('click', playCard, true);
+      
+      }
+      let handkarten = document.getElementsByClassName(`karte-${aktiverSpieler}`);
+    let sdf = handkarten.parentNode;
+    console.log("handkarten: " + handkarten);
     for(var i = 0; i < handkarten.length; i++) {
-    clickKarte[0].addEventListener('click', playCard, true);
-    
+      handkarten[i].addEventListener('click', playCard(i),true);  
+      console.log("aktuelle Karte: " + handkarten[i]);
     }
-    let handkarten = document.getElementsByClassName(`karte-${aktiverSpieler}`);
-  let sdf = handkarten.parentNode;
-  console.log("handkarten: " + handkarten);
-  for(var i = 0; i < handkarten.length; i++) {
-    handkarten[i].addEventListener('click', playCard(i),true);  
-    console.log("aktuelle Karte: " + handkarten[i]);
-  }
-    
-    */
+      
+      */
     //prüft karte
     //let karte ab
     //prüft gewinner
@@ -226,6 +226,15 @@ for (let i = 0; i < imageArray.length; i++) {
   });
 }
 
+for(var i = 0; i < imageArray.length; i++) {
+       imageArray[i].addEventListener("click", bindClick(i));
+ }
+
+ function bindClick(i) {
+    return function() {
+        console.log("you clicked region number " + i);
+    };
+ }
 
     */
 
@@ -235,68 +244,70 @@ function playCard() {
     let werteAblage = getKartenWerte(ablageKarte);
     let colorAblage = werteAblage[0];
     let valueAblage = werteAblage[1];
-    //console.log("Ablage: " + colorAblage + ", " +  valueAblage);
+    console.log("Ablage: " + colorAblage + ", " + valueAblage);
 
     //Karte auswählen:
     let kartenArray = document.getElementsByClassName(`karte-${aktiverSpieler}`);
+    console.log("kartenArray: " + kartenArray);
     let werteClickKarte;
+    let wildColor = '';
 
+    for (let i = 0; i < kartenArray.length; i++) {
+        kartenArray[i].addEventListener("click", function () {
+            console.log("you clicked region number " + i);
 
-    for (let i = 0; i < kartenArray; i++) {
-        kartenArray[i].addEventListener("click", function() {
-          console.log("you clicked region number " + i);
+            let clickKarteInfo = this.getAttribute('src');
+            werteClickKarte = getKartenWerte(clickKarteInfo);
+            alert("im Array KartenAttribut auslesen: " + clickKarteInfo);
 
-          let clickKarteInfo = this.getAttribute('src');
-          werteClickKarte = getKartenWerte(clickKarteInfo);
-          alert("im Array KartenAttribut auslesen: " + clickKarteInfo);
+            let colorClick = werteClickKarte[0];
+            let valueClick = werteClickKarte[1];
+            console.log("Ablage: " + colorClick + ", " + valueClick);
 
-          let colorClick = werteClickKarte[0];
-          let valueClick = werteClickKarte[1];
-          console.log("Ablage: " + colorClick + ", " +  valueClick);
-          
-    if (colorClick == 'Black') {
-        farbwechsel();
+            if (valueClick == '14') {
+                colorClick = farbWechsel();
+                wildColor = colorClick;
+            }
+            if (valueClick == '13') {
+                //prüfen ob Karte gespielt werden darf
+                colorClick = farbWechsel();
+                wildColor = colorClick;
+            }
+
+            if (valueClick == valueAblage || colorClick == colorAblage) {
+                this.setAttribute("id","spielKarteHuiiiii");
+                neueTopCard();
+                karteAblegen(valueClick, colorClick, wildColor);
+            } else {
+                alert("else");
+                //shake karte
+                this.add('shake');
+
+            }
+
+        })
     }
-    if (valueClick == '13'){
-        //prüfen ob Karte gespielt werden darf
-    }
-    if (valueClick == valueAblage || colorClick == colorAblage) {
-        this.childNodes[0].hide();
-        
-        //karte versenden
-        let ablage = document.getElementById('ablagestapel');
-        ablage.addEventListener('change', karteAblegen);
-    } else {
-        alert("else");
-        //shake karte
-        this.childNodes[0].add('shake');
-
-    }
-
-        });
-      }
-    /*kartenArray.forEach(element => element.addEventListener('click', function(){
-        let clickKarteInfo = this.getAttribute('src');
-        werteClickKarte = getKartenWerte(clickKarteInfo);
-
-        
-        //this.setAttribute("id", "halleluja")
-    }, false ) //bubble
-
-    );
-    */
 
     document.getElementById('hebestapel').addEventListener('click', drawCard);
 
 }
 
 
-function getKartenWerte(topKarte){
+function getKartenWerte(topKarte) {
     console.log("in Funktion topKarte: " + topKarte);
     let arr = [];
     let color;
-    let valueArray = topKarte.split('').slice(-6, -4);
+    let valueArray = topKarte.split('');
+    let value;
+    if(valueArray[-6] == 1){
+        valueArray.slice(-6, -4);
+        value = `${valueArray[0]}${valueArray[1]}`;
+    } else {
+        value = valueArray.slice(-5, -4);
+    }
+    if(valueArray.length > 1){
     let value = `${valueArray[0]}${valueArray[1]}`;
+    }
     if (topKarte.includes('Red') == true) {
         color = 'Red';
     } else if (topKarte.includes('Blue') == true) {
@@ -314,6 +325,7 @@ function getKartenWerte(topKarte){
 }
 
 function farbWechsel() {
+    let colorWechsel;
     let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
     chooseColorModal.show();
     document.getElementById('chooseRed').addEventListener('click', function (evt) {
@@ -322,6 +334,7 @@ function farbWechsel() {
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
         chooseColorModal.hide();
+        return colorWechsel = 'Red';
     });
     document.getElementById('chooseYellow').addEventListener('click', function (evt) {
         ablageCard = 'Yellow014';
@@ -329,6 +342,7 @@ function farbWechsel() {
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
         chooseColorModal.hide();
+        return colorWechsel = 'Yellow';
     });
     document.getElementById('chooseGreen').addEventListener('click', function (evt) {
         ablageCard = 'Green014';
@@ -336,6 +350,7 @@ function farbWechsel() {
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
         chooseColorModal.hide();
+        return colorWechsel = 'Green';
     });
     document.getElementById('chooseBlue').addEventListener('click', function (evt) {
         ablageCard = 'Blue014';
@@ -343,10 +358,7 @@ function farbWechsel() {
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
         chooseColorModal.hide();
-
-        alert("Farbwechsel: " + evt)
-        return evt; //eventuell löschen !!!
-
+        return colorWechsel = 'Blue';
     });
 }
 
@@ -403,8 +415,27 @@ callback()
 }
 */
 
+async function neueTopCard(callback){
+    let responseAnfrage = await fetch(`http://nowaunoweb.azurewebsites.net/api/api/game/topCard`, {
+        method: 'GET',
+    });
+    let responseAblage;
+    if (responseAnfrage.ok) {
+        responseInfo = await response.json();
+        console.log("Ablage neu: " + responseAblage);
+        erstelltAblage(responseAblage);
+    }
+    callback()
+}
 
-async function karteAblegen() {
+
+async function karteAblegen(value, color, wildColor) {
+    if(value == 13 || value == 14){
+        color = 'Black';
+    } else {
+        wildColor = '';
+    }
+
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`, {
         method: 'PUT',
     });
@@ -418,15 +449,20 @@ async function karteAblegen() {
             alert("Du bis nicht dran!");
         } else {
             aktiverSpieler = responseInfo.Player;
-
+            let spielkarte = document.getElementById('spielKarteHuiiiii');
+            spielkarte.add('huiiii');
+            if (spielID.parentNode != null) {
+                spielkarte.parentNode.removeChild(spielkarte);   
+            }
         }
     }
+   
     unoRufen(aktiverSpieler);
     gewinner(aktiverSpieler);
     focusAktivPlayer(aktiverSpieler);
 }
 
-function unoRufen(aktiverSpieler){
+function unoRufen(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
     alert("Wie viele Karten hat der Spieler noch? " + aP.childNodes.length)
     if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
@@ -475,7 +511,7 @@ function addCard(el) {
     let div = document.createElement("div");
     div.setAttribute("style", "display: inline-block");
     const img = document.createElement("img");
-    const card = `${el.Color}0${el.Value}`;
+    const card = `${el.Color}${el.Value}`;
     img.src = `${baseUrl}${card}.png`;
     img.setAttribute("class", "rounded d-block");
     img.setAttribute("style", "height: 80px; padding: 10px");
