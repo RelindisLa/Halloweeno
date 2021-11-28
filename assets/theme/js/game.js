@@ -5,7 +5,8 @@ let spielID;
 let exit = false;
 
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
-myModal.show();
+//myModal.show();  -------------------------------------------------------------------------------------------------> NamesModal!!!
+startGame(gameLoop); //   --------------------------------------------------------------------> wird nicht gebraucht beim Modal!!!!
 
 document.getElementById('playerNamesForm').addEventListener('keyup', function (evt) {
     //Namensunterscheidung
@@ -13,7 +14,7 @@ document.getElementById('playerNamesForm').addEventListener('keyup', function (e
     let player2 = document.getElementById('playerName2input').value.toUpperCase();
     let player3 = document.getElementById('playerName3input').value.toUpperCase();
     let player4 = document.getElementById('playerName4input').value.toUpperCase();
-    playerListe = [player1, player2, player3, player4];
+    //playerListe = [player1, player2, player3, player4];  --------------------------------------------------------> NamesModal!!!
 
     if (player1 === "" || player2 === "" || player3 === "" || player4 === "") {
         document.getElementById('playerNamesSubmit').disabled = true;
@@ -35,6 +36,7 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
 });
 
 async function startGame(callback) {
+    playerListe = ["a","b","c","d"]; //  ------------------->--------------------------------->  wird nicht gebraucht beim Modal!!!!
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
         body: JSON.stringify(
@@ -69,8 +71,6 @@ function gameLoop() {
     //readUserInput();
     //updateState();
     //printState();
-
-
 }
 
 
@@ -106,7 +106,7 @@ function erstPositionen(startinhalt) {
             const img = document.createElement("img");
             const card = `${el.Color}0${el.Value}`;
             img.src = `${baseUrl}${card}.png`;
-            img.setAttribute("class", "rounded d-block");
+            img.setAttribute("class", `karte-${element.Player}`); //rounded d-block ??
             img.setAttribute("style", "height: 80px; padding: 10px");
             divA.appendChild(div);
             div.appendChild(img);
@@ -155,8 +155,29 @@ function focusAktivPlayer(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
     aP.parentNode.classList.remove('unfocus');
     console.log('FOCUS AktivPlayer: ' + aktiverSpieler);
+    
+    playCard();
 
-    aP.addEventListener('click', playCard,true);
+    //aP.addEventListener('click', playCard,true);
+  
+  /*
+    clickKarte.addEventListener('click', playCard);
+    clickKarte[0].addEventListener('click', playCard,true);
+    alert("abc[0]: " + abc[0].getAttribute('src'));
+    let handkarten = aP.getElementsByTagName('img');
+    for(var i = 0; i < handkarten.length; i++) {
+    clickKarte[0].addEventListener('click', playCard, true);
+    
+    }
+    let handkarten = document.getElementsByClassName(`karte-${aktiverSpieler}`);
+  let sdf = handkarten.parentNode;
+  console.log("handkarten: " + handkarten);
+  for(var i = 0; i < handkarten.length; i++) {
+    handkarten[i].addEventListener('click', playCard(i),true);  
+    console.log("aktuelle Karte: " + handkarten[i]);
+  }
+    
+    */
     //prüft karte
     //let karte ab
     //prüft gewinner
@@ -164,18 +185,113 @@ function focusAktivPlayer(aktiverSpieler) {
 
 
 }
+/*
+function playCard(index) {
+    //Spiellogik - > nur gültige Karten spielen:
+    let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
+    let clickKarte = document.getElementsByClassName(`karte-${aktiverSpieler}`)[index];
+    let clickKarteInfo = clickKarte.getAttribute('src');
+    //let clickKarte = karte.getAttribute('src');
+    console.log("ablagekarte: " + ablageKarte);
+    console.log("clickarte: "+ clickKarte);
+    console.log("clickarteInfo: "+ clickKarteInfo);
+        window.addEventListener('click', (e) => functionHandler(e, ...args));
+
+
+
+        var li = document.querySelectorAll("li");
+
+for (let i = 0; i < li.length; i++) {
+  li[i].addEventListener("click", function() {
+    li[i].classList.toggle("done");
+  })
+}
+
+.done {
+  text-decoration: line-through;
+}
+
+
+let imageArray = [];
+gShape = new createjs.Shape();
+// shape is something
+imageArray.push(gShape); // Dumped all the objects
+
+for (let i = 0; i < imageArray.length; i++) {
+  imageArray[i].addEventListener("click", function() {
+    console.log("you clicked region number " + i);
+  });
+}
+
+
+    */
 
 function playCard() {
-    let valueArray;
-    let color;
-
     //Spiellogik - > nur gültige Karten spielen:
-    let topKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
+    let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
+    let werteAblage = getKartenWerte(ablageKarte);
+    let colorAblage = werteAblage[0];
+    let valueAblage = werteAblage[1];
+    //console.log("Ablage: " + colorAblage + ", " +  valueAblage);
 
-    //alert(topKarte);
-    //assets/images/card/Red04.png
+    //Karte auswählen:
+    let kartenArray = document.getElementsByClassName(`karte-${aktiverSpieler}`);
+    let werteClickKarte;
 
-    valueArray = topKarte.split('').slice(-6, -4);
+
+    for (let i = 0; i < kartenArray; i++) {
+        kartenArray[i].addEventListener("click", function() {
+          console.log("you clicked region number " + i);
+
+          let clickKarteInfo = this.getAttribute('src');
+          werteClickKarte = getKartenWerte(clickKarteInfo);
+          alert("im Array KartenAttribut auslesen: " + clickKarteInfo);
+
+          let colorClick = werteClickKarte[0];
+          let valueClick = werteClickKarte[1];
+          console.log("Ablage: " + colorClick + ", " +  valueClick);
+          
+    if (colorClick == 'Black') {
+        farbwechsel();
+    }
+    if (valueClick == '13'){
+        //prüfen ob Karte gespielt werden darf
+    }
+    if (valueClick == valueAblage || colorClick == colorAblage) {
+        this.childNodes[0].hide();
+        
+        //karte versenden
+        let ablage = document.getElementById('ablagestapel');
+        ablage.addEventListener('change', karteAblegen);
+    } else {
+        alert("else");
+        //shake karte
+        this.childNodes[0].add('shake');
+
+    }
+
+        });
+      }
+    /*kartenArray.forEach(element => element.addEventListener('click', function(){
+        let clickKarteInfo = this.getAttribute('src');
+        werteClickKarte = getKartenWerte(clickKarteInfo);
+
+        
+        //this.setAttribute("id", "halleluja")
+    }, false ) //bubble
+
+    );
+    */
+
+    document.getElementById('hebestapel').addEventListener('click', drawCard);
+
+}
+
+function getKartenWerte(topKarte){
+    console.log("in Funktion topKarte: " + topKarte);
+    let arr = [];
+    let color;
+    let valueArray = topKarte.split('').slice(-6, -4);
     let value = `${valueArray[0]}${valueArray[1]}`;
     if (topKarte.includes('Red') == true) {
         color = 'Red';
@@ -188,26 +304,9 @@ function playCard() {
     } else {
         alert("Falsche Ablagekarte ausgelesen")
     }
-
-    if (this.color == 'Black') {
-        farbwechsel();
-    }
-    if (this.value == '13'){
-        //prüfen ob Karte gespielt werden darf
-    }
-    if (this.Value == value || this.Color == color) {
-        //karte versenden
-        let ablage = document.getElementById('ablagestapel');
-        ablage.addEventListener('change', karteAblegen);
-    } else {
-        //shake karte
-        this.classList.add('shake');
-        this.classList.remove('shake');
-    }
-
-
-    document.getElementById('hebestapel').addEventListener('click', drawCard);
-
+    arr[0] = color;
+    arr[1] = value;
+    return arr;
 }
 
 function farbwechsel() {
@@ -217,7 +316,7 @@ function farbwechsel() {
     document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
         evt.preventDefault();
         chooseColorModal.hide();
-        alert("Farbwechsel: " + evt);
+        alert("Farbwechsel: " + evt)
         return evt;
     });
 
@@ -313,6 +412,7 @@ function unoRufen(aktiverSpieler){
             return evt;
         });
     }
+
 }
 
 function gewinner(aktiverSpieler) {
@@ -324,6 +424,8 @@ function gewinner(aktiverSpieler) {
 }
 
 // Karte ziehen
+
+
 async function drawCard() {
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
         method: 'PUT',
@@ -336,6 +438,7 @@ async function drawCard() {
         aktiverSpieler = newCard.NextPlayer;
         focusAktivPlayer(aktiverSpieler);
     }
+
 }
 
 //gezogene Karte dem Spieler hinzufügen
