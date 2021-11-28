@@ -144,7 +144,7 @@ function unfocus() {
     while (counter < 5) {
         let wohin = "playerName" + counter;
         document.getElementById(wohin).classList.add('unfocus');
-        console.log('FOCUS LOST!');
+        console.log('FOCUS LOST! AktivPlayer: ' + aktiverSpieler);
         counter++;
     }
 }
@@ -154,8 +154,9 @@ function focusAktivPlayer(aktiverSpieler) {
     unfocus();
     let aP = document.getElementById(aktiverSpieler);
     aP.parentNode.classList.remove('unfocus');
+    console.log('FOCUS AktivPlayer: ' + aktiverSpieler);
 
-    aP.addEventListener('click', playCard, true);
+    aP.addEventListener('click', playCard,true);
     //prüft karte
     //let karte ab
     //prüft gewinner
@@ -165,14 +166,13 @@ function focusAktivPlayer(aktiverSpieler) {
 }
 
 function playCard() {
-
     let valueArray;
     let color;
 
     //Spiellogik - > nur gültige Karten spielen:
     let topKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
 
-    alert(topKarte);
+    //alert(topKarte);
     //assets/images/card/Red04.png
 
     valueArray = topKarte.split('').slice(-6, -4);
@@ -189,10 +189,11 @@ function playCard() {
         alert("Falsche Ablagekarte ausgelesen")
     }
 
-    console.log("Ablage: " + value + ", " + color);
-    console.log("this ClickEvent: " + this);
     if (this.color == 'Black') {
         farbwechsel();
+    }
+    if (this.value == '13'){
+        //prüfen ob Karte gespielt werden darf
     }
     if (this.Value == value || this.Color == color) {
         //karte versenden
@@ -200,15 +201,26 @@ function playCard() {
         ablage.addEventListener('change', karteAblegen);
     } else {
         //shake karte
-        aP.add('shake');
+        this.classList.add('shake');
+        this.classList.remove('shake');
     }
 
+
+    document.getElementById('hebestapel').addEventListener('click', drawCard);
 
 }
 
 function farbwechsel() {
     let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
     chooseColorModal.show();
+
+    document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
+        evt.preventDefault();
+        chooseColorModal.hide();
+        alert("Farbwechsel: " + evt);
+        return evt;
+    });
+
 }
 
 
@@ -282,11 +294,28 @@ async function karteAblegen() {
 
         }
     }
-    gewinner();
-    focusAktivPlayer();
+    unoRufen(aktiverSpieler);
+    gewinner(aktiverSpieler);
+    focusAktivPlayer(aktiverSpieler);
 }
 
-function gewinner() {
+function unoRufen(aktiverSpieler){
+    let aP = document.getElementById(aktiverSpieler);
+    alert("Wie viele Karten hat der Spieler noch? " + aP.childNodes.length)
+    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
+        let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufen'));
+        unoRufenModal.show();
+
+        document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
+            evt.preventDefault();
+            unoRufenModal.hide();
+            alert("unoRufen info: " + evt);
+            return evt;
+        });
+    }
+}
+
+function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
     if (!aP.hasChildNodes()) {
         alert("Du hast gewonnen!!!");
@@ -295,8 +324,6 @@ function gewinner() {
 }
 
 // Karte ziehen
-document.getElementById('hebestapel').addEventListener('click', drawCard);
-
 async function drawCard() {
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
         method: 'PUT',
@@ -307,6 +334,7 @@ async function drawCard() {
         console.log(newCard);
         addCard(newCard.Card);
         aktiverSpieler = newCard.NextPlayer;
+        focusAktivPlayer(aktiverSpieler);
     }
 }
 
@@ -316,7 +344,7 @@ function addCard(el) {
     let div = document.createElement("div");
     div.setAttribute("style", "display: inline-block");
     const img = document.createElement("img");
-    const card = `${el.Color}${el.Value}`;
+    const card = `${el.Color}0${el.Value}`;
     img.src = `${baseUrl}${card}.png`;
     img.setAttribute("class", "rounded d-block");
     img.setAttribute("style", "height: 80px; padding: 10px");
