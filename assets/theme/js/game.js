@@ -107,7 +107,7 @@ function erstPositionen(startinhalt) {
             const div = document.createElement("div");
             div.setAttribute("style", "display: inline-block");
             const img = document.createElement("img");
-            const card = `${el.Color}0${el.Value}`;
+            const card = `${el.Color}${el.Value}`;
             img.src = `${baseUrl}${card}.png`;
             img.setAttribute("class", "rounded d-block");
             img.setAttribute("style", "height: 80px; padding: 10px");
@@ -176,7 +176,7 @@ function playCard() {
     let topKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
 
     //alert(topKarte);
-    //assets/images/card/Red04.png
+    //assets/images/card/Red4.png
 
     valueArray = topKarte.split('').slice(-6, -4);
     let value = `${valueArray[0]}${valueArray[1]}`;
@@ -217,28 +217,28 @@ function farbWechsel() {
     let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
     chooseColorModal.show();
     document.getElementById('chooseRed').addEventListener('click', function (evt) {
-        ablageCard = 'Red014';
+        ablageCard = 'Red14';
         ablageBild.src = `${baseUrl}${ablageCard}.png`;
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
         chooseColorModal.hide();
     });
     document.getElementById('chooseYellow').addEventListener('click', function (evt) {
-        ablageCard = 'Yellow014';
+        ablageCard = 'Yellow14';
         ablageBild.src = `${baseUrl}${ablageCard}.png`;
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
         chooseColorModal.hide();
     });
     document.getElementById('chooseGreen').addEventListener('click', function (evt) {
-        ablageCard = 'Green014';
+        ablageCard = 'Green14';
         ablageBild.src = `${baseUrl}${ablageCard}.png`;
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
         chooseColorModal.hide();
     });
     document.getElementById('chooseBlue').addEventListener('click', function (evt) {
-        ablageCard = 'Blue014';
+        ablageCard = 'Blue14';
         ablageBild.src = `${baseUrl}${ablageCard}.png`;
         ablageStapel.appendChild(ablageBild);
         evt.preventDefault();
