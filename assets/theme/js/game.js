@@ -160,6 +160,10 @@ function focusAktivPlayer(aktiverSpieler) {
 }
 
 function playCard() {
+
+    getCardsOf(aktiverSpieler);
+
+
     //Spiellogik - > nur gültige Karten spielen:
     let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
     let werteAblage = getKartenWerte(ablageKarte);
@@ -322,14 +326,12 @@ async function neueTopCard(callback){
     callback()
 }
 
-
 async function karteAblegen(value, color, wildColor) {
     if(value == 13 || value == 14){
         color = 'Black';
     } else {
         wildColor = '';
     }
-
     //console.log(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`);
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`, {
         method: 'PUT',
@@ -343,35 +345,52 @@ async function karteAblegen(value, color, wildColor) {
         } else if (responseInfo.error == 'IncorrectPlayer') {
             alert("Du bis nicht dran!");
         } else {
-            aktiverSpieler = responseInfo.Player;
+            if(unoRufen(aktiverSpieler) == true){
+                alert("UNO UNO UNO");
+            };
             let spielkarte = document.getElementById('spielKarteHuiiiii');
             spielkarte.add('huiiii');
+            aktiverSpieler = responseInfo.Player;
             if (spielID.parentNode != null) {
                 spielkarte.parentNode.removeChild(spielkarte);   
             }
         }
     }
-   
-    unoRufen(aktiverSpieler);
     gewinner(aktiverSpieler);
     focusAktivPlayer(aktiverSpieler);
 }
 
 function unoRufen(aktiverSpieler) {
+    let unoGerufen = true;
     let aP = document.getElementById(aktiverSpieler);
     if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
         let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufen'));
         unoRufenModal.show();
 
-        document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
+        document.getElementById('unoYes').addEventListener('submit', function (evt) {
+            unoGerufen = true;
             evt.preventDefault();
             unoRufenModal.hide();
-            alert("unoRufen");
-            return evt;
+            return unoGerufen;
         });
+    }
+}
+
+
+// SpielerInfo vom Server holen:
+async function getCardsOf(player) {
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/{${spielID}}?playerName={${player}}`, {
+        method: 'GET',
+    });
+    let infoPlayerAbfrage;
+    if (response.ok) {
+        infoPlayerAbfrage = await response.json(); // response Body auslesen
+        alert("infoPlayerAbfrage: " + JSON.stringify(infoPlayerAbfrage));
     }
 
 }
+
+
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
