@@ -573,8 +573,11 @@ nav .mbr-section-btn {
 .navbar {
   display: -webkit-flex;
   -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
   -webkit-align-items: center;
+  align-items: center;
   -webkit-justify-content: space-between;
+  justify-content: space-between;
 }
 
 .navbar-collapse {
@@ -997,7 +1000,6 @@ Hier ist der Code für die Player
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   perspective: 1000px;
-
 }
 
 @keyframes shake {
@@ -1017,3 +1019,33 @@ Hier ist der Code für die Player
     transform: translate3d(4px, 0, 0);
   }
 }
+
+.huiiii {
+	-webkit-animation: slide-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	        animation: slide-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+@-webkit-keyframes huiiii {
+  0% {
+    -webkit-transform: translateY(-1000px) translateX(1000px);
+            transform: translateY(-1000px) translateX(1000px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) translateX(0);
+            transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes slide-in-tr {
+  0% {
+    -webkit-transform: translateY(-1000px) translateX(1000px);
+            transform: translateY(-1000px) translateX(1000px);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: translateY(0) translateX(0);
+            transform: translateY(0) translateX(0);
+    opacity: 1;
+  }
+}
+

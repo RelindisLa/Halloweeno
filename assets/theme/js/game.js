@@ -124,6 +124,10 @@ function erstelltAblage(card) {
     ablageBild.src = `${baseUrl}${ablageCard}.png`;
     ablageStapel.appendChild(ablageBild);
 }
+function removeAblage(){
+    ablageStapel = document.getElementById("ablagestapel");
+    ablageStapel.removeChild(ablageStapel.childNodes[0]);
+}
 
 function erstelltHebestapel() {
     //Hebestapel:
@@ -333,7 +337,7 @@ async function karteAblegen(value, color, wildColor) {
         wildColor = '';
     }
     //console.log(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`);
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value={${value}}&color={${color}}&wildColor={${wildColor}}`, {
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value=${value}&color=${color}&wildColor=${wildColor}`, {
         method: 'PUT',
     });
     let responseInfo;
@@ -349,16 +353,21 @@ async function karteAblegen(value, color, wildColor) {
                 alert("UNO UNO UNO");
             };
             let spielkarte = document.getElementById('spielKarteHuiiiii');
-            spielkarte.add('huiiii');
-            aktiverSpieler = responseInfo.Player;
+            spielkarte.classList.add('huiiii');
+            //removeAblage();
+            //erstelltAblage(spielkarte);
+
             if (spielID.parentNode != null) {
-                spielkarte.parentNode.removeChild(spielkarte);   
+                spielkarte.parentNode.removeChild(childNodes.spielkarte);   
             }
         }
+        aktiverSpieler = responseInfo.Player;
     }
+    neueTopCard();
     gewinner(aktiverSpieler);
     focusAktivPlayer(aktiverSpieler);
 }
+
 
 function unoRufen(aktiverSpieler) {
     let unoGerufen = true;
@@ -379,7 +388,7 @@ function unoRufen(aktiverSpieler) {
 
 // SpielerInfo vom Server holen:
 async function getCardsOf(player) {
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/{${spielID}}?playerName={${player}}`, {
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
         method: 'GET',
     });
     let infoPlayerAbfrage;
@@ -389,8 +398,6 @@ async function getCardsOf(player) {
     }
 
 }
-
-
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
