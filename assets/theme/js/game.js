@@ -203,7 +203,7 @@ function playCard() {
                 wildColor = colorClick;
             }
 
-            if (valueClick == valueAblage || colorClick == colorAblage) {
+            if (valueClick == valueAblage || colorClick == colorAblage || colorClick =='Black') {
                 this.setAttribute("id","spielKarteHuiiiii");
                 //neueTopCard();
                 console.log("valueClick, colorClick, wildColor " + valueClick +", " + colorClick + ", " + wildColor);
@@ -246,6 +246,8 @@ function getKartenWerte(topKarte) {
         color = 'Green';
     } else if (topKarte.includes('Yellow') == true) {
         color = 'Yellow';
+    } else if (topKarte.includes('Black') == true) {
+        color = 'Black';
     } else {
         alert("Falsche Ablagekarte ausgelesen")
     }
@@ -318,12 +320,12 @@ callback()
 */
 
 async function neueTopCard(callback){
-    let responseAnfrage = await fetch(`http://nowaunoweb.azurewebsites.net/api/api/game/topCard`, {
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/topCard/${spielID}`, { 
         method: 'GET',
     });
     let responseAblage;
-    if (responseAnfrage.ok) {
-        responseInfo = await response.json();
+    if (response.ok) {
+        responseAblage = await response.json();
         console.log("Ablage neu: " + responseAblage);
         erstelltAblage(responseAblage);
     }
@@ -401,6 +403,9 @@ async function getCardsOf(player) {
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
+    console.log(aktiverSpieler);
+    console.log("doc: " +document.getElementById(aktiverSpieler));
+    console.log("aP = "+aP);
     if (!aP.hasChildNodes()) {
         alert("Du hast gewonnen!!!");
         //exit = true;
