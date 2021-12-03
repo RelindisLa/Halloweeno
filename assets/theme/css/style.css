@@ -971,6 +971,14 @@ canvas{
   filter: blur(1px);
 }
 
+/* ----------------------------------------------------------------------------------------------
+Hier ist die Position der Soundbar in der Nav
+-----------------------------------------------------------------------------------------------*/
+
+#sound_bar {
+  margin-left: 40px;
+}
+
 
 /* ----------------------------------------------------------------------------------------------
 Hier ist der Code für die Player
@@ -987,6 +995,7 @@ Hier ist der Code für die Player
 }
 #ablageHebeStapel {
   text-align: center;
+  width: auto;
 }
 #spielerkarten3u4 {
   text-align: right;
@@ -1006,46 +1015,49 @@ Hier ist der Code für die Player
   10%, 90% {
     transform: translate3d(-1px, 0, 0);
   }
-  
   20%, 80% {
     transform: translate3d(2px, 0, 0);
   }
-
   30%, 50%, 70% {
     transform: translate3d(-4px, 0, 0);
   }
-
   40%, 60% {
     transform: translate3d(4px, 0, 0);
   }
 }
 
-.huiiii {
-	-webkit-animation: slide-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-	        animation: slide-in-tr 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+.huiiiiWeg {
+    -webkit-animation: fade-out-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            animation: fade-out-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
-@-webkit-keyframes huiiii {
+
+@-webkit-keyframes huiiiiWeg {
   0% {
-    -webkit-transform: translateY(-1000px) translateX(1000px);
-            transform: translateY(-1000px) translateX(1000px);
-    opacity: 0;
-  }
-  100% {
-    -webkit-transform: translateY(0) translateX(0);
-            transform: translateY(0) translateX(0);
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
     opacity: 1;
   }
-}
-@keyframes slide-in-tr {
-  0% {
-    -webkit-transform: translateY(-1000px) translateX(1000px);
-            transform: translateY(-1000px) translateX(1000px);
+  100% {
+    -webkit-transform: translateZ(80px);
+            transform: translateZ(80px);
     opacity: 0;
   }
-  100% {
-    -webkit-transform: translateY(0) translateX(0);
-            transform: translateY(0) translateX(0);
+}
+@keyframes huiiiiWeg {
+  0% {
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
     opacity: 1;
   }
+  100% {
+    -webkit-transform: translateZ(80px);
+            transform: translateZ(80px);
+    opacity: 0;
+  }
 }
+
+.huiiiiDa {
+
+}
+
 
