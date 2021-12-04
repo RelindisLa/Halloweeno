@@ -1026,38 +1026,20 @@ Hier ist der Code für die Player
   }
 }
 
-.huiiiiWeg {
-    -webkit-animation: fade-out-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-            animation: fade-out-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+.fade-out-fwd {
+	animation: fade-out-fwd 0.7s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 }
 
-@-webkit-keyframes huiiiiWeg {
+@-webkit-keyframes fade-out-fwd {
   0% {
-    -webkit-transform: translateZ(0);
-            transform: translateZ(0);
+    transform: translateZ(0);
     opacity: 1;
   }
   100% {
-    -webkit-transform: translateZ(80px);
-            transform: translateZ(80px);
-    opacity: 0;
-  }
-}
-@keyframes huiiiiWeg {
-  0% {
-    -webkit-transform: translateZ(0);
-            transform: translateZ(0);
-    opacity: 1;
-  }
-  100% {
-    -webkit-transform: translateZ(80px);
-            transform: translateZ(80px);
-    opacity: 0;
+    transform: translateZ(80px);
+     opacity: 0;
   }
 }
 
-.huiiiiDa {
-
-}
 
 

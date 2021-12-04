@@ -13,7 +13,7 @@ const audioCardflick = new Audio('assets/sound/mixkit-twig-breaking-2945.wav');
 
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
 //myModal.show();  -------------------------------------------------------------------------------------------------> NamesModal!!!
-startGame(gameLoop); //   --------------------------------------------------------------------> wird nicht gebraucht beim Modal!!!!
+startGame(printGameInfo); //   --------------------------------------------------------------------> wird nicht gebraucht beim Modal!!!!
 
 document.getElementById('playerNamesForm').addEventListener('keyup', function (evt) {
     //Namensunterscheidung
@@ -37,7 +37,7 @@ document.getElementById('playerNamesForm').addEventListener('keyup', function (e
 });
 
 document.getElementById('playerNamesForm').addEventListener('submit', function (evt) {
-    startGame(gameLoop);
+    startGame(printGameInfo);
     evt.preventDefault();
     myModal.hide();
 });
@@ -68,10 +68,9 @@ async function startGame(callback) {
     callback()
 }
 
-function gameLoop() {
-    console.log("Spielid im gameLoop " + spielID);
-    console.log("Startspieler im gameLoop: " + aktiverSpieler);
-
+function printGameInfo() {
+    console.log("Spielid: " + spielID);
+    console.log("Startspieler: " + aktiverSpieler);
     focusAktivPlayer(aktiverSpieler);
 }
 
@@ -101,22 +100,23 @@ function erstPositionen(startinhalt) {
         let divA = document.createElement("div");
         divA.setAttribute("id", element.Player);
         wo.appendChild(divA);
-        spielerKartenErstellen2(element,divA);
+        spielerKartenErstellen(element, divA);
         counter++;
     });
 }
 
-function spielerKartenErstellen(element){
+function erstesKartenErstellen(element) {
     let divA = document.getElementById(element.Player);
     console.log("document.getElementById(element.Player) " + divA);
     console.log("Element.player : " + element.Player);
-    while (divA.firstChild) {
-        divA.removeChild(divA.firstChild);
+    let kartendelete = document.getElementsByClassName(`karte-${aktiverSpieler}`);
+    while (kartendelete.hasChildNodes == true) {
+        kartendelete.removeChild(kartendelete.firstChild);
     }
-    spielerKartenErstellen2(element,divA);
+    spielerKartenErstellen(element, divA);
 }
 
-function spielerKartenErstellen2(element, divA){
+function spielerKartenErstellen(element, divA) {
     element.Cards.forEach(el => {
         const div = document.createElement("div");
         div.setAttribute("style", "display: inline-block");
@@ -129,39 +129,17 @@ function spielerKartenErstellen2(element, divA){
         div.appendChild(img);
     })
 }
-/*
-function erstelltAblage(card) {
-    //Ablagestapel:
-    ablageStapel = document.getElementById("ablagestapel");
-    ablageBild = document.createElement("img");
-    ablageBild.setAttribute("style", "text-align: center; height: 100px;");
-    ablageBild.setAttribute("id", "ablageNeu");
-    ablageBild.setAttribute("class", "ablage123");
-    ablageCard = `${card.Color}${card.Value}`;
-    ablageBild.src = `${baseUrl}${ablageCard}.png`;
-    ablageStapel.appendChild(ablageBild);
-}
-*/
-function erstelltAblage(card) {
-    //Ablagestapel:
-    ablageStapel = document.getElementById("ablagestapel");
-    ablageBild = document.createElement("img");
-    ablageBild.setAttribute("style", "text-align: center; height: 100px;");
-    ablageBild.setAttribute("class", "ablage123");
-    ablageCard = `${card.Color}${card.Value}`;
-    ablageBild.src = `${baseUrl}${ablageCard}.png`;
-    ablageStapel.appendChild(ablageBild);
-}
-function removeAblagekarte(){
-    let ablageKarte = document.getElementById('ablagestapel');
-    while (ablageKarte.firstChild) {
-        ablageKarte.removeChild(ablageKarte.firstChild);
-    }
-    console.log("AblageKarte " + ablageKarte);
-    //neueTopCard(erstelltAblage);
-    //erstelltAblage(neueTopCard); ------------------------------------------------- !????! Fehler !????! -----------------
-}
 
+function erstelltAblage(card) {
+    //Ablagestapel:
+    ablageStapel = document.getElementById("ablagestapel");
+    ablageBild = document.createElement("img");
+    ablageBild.setAttribute("style", "text-align: center; height: 100px;");
+    ablageBild.setAttribute("class", "ablage123");
+    ablageCard = `${card.Color}${card.Value}`;
+    ablageBild.src = `${baseUrl}${ablageCard}.png`;
+    ablageStapel.appendChild(ablageBild);
+}
 function erstelltHebestapel() {
     //Hebestapel:
     let wo2 = document.getElementById("hebestapel");
@@ -175,10 +153,10 @@ function erstelltHebestapel() {
 //Blur alle Spieler:
 function unfocus() {
     let counter = 1;
-
     while (counter < 5) {
         let wohin = "playerName" + counter;
-        document.getElementById(wohin).classList.add('unfocus');
+        let dahin = document.getElementById(wohin);
+        dahin.classList.add('unfocus');
         counter++;
     }
 }
@@ -191,114 +169,130 @@ function focusAktivPlayer(aktiverSpieler) {
     playCard();  //prüft karte, let karte ab, prüft gewinner, get next Player
 }
 
-function playCard() {
-    let color;
-    let value;
-    //Spiellogik - > nur gültige Karten spielen:
+function playCard() {     //Spiellogik - > nur gültige Karten spielen:
+    //Ablage holen zum Vergleichen
     let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
     let werteAblage = getKartenWerte(ablageKarte);
     let colorAblage = werteAblage[0];
     let valueAblage = werteAblage[1];
     console.log("Ablagekarte: " + colorAblage + ", " + valueAblage);
 
-    //Karte auswählen:
+    //alle Karten mit eventListener versehen und prüfen
     let kartenArray = document.getElementsByClassName(`karte-${aktiverSpieler}`);
-    //console.log("Karten des aktivenSpielers: " + kartenArray);
-    let wildColor = '';
-
     for (let i = 0; i < kartenArray.length; i++) {
         kartenArray[i].addEventListener("click", function () {
-            let werteClickKarte =  getKartenWerte(this.getAttribute('src'));
+            let color;
+            let value;
+            let werteClickKarte = getKartenWerte(this.getAttribute('src'));
             let colorClick = werteClickKarte[0];
             let valueClick = werteClickKarte[1];
-            //console.log("gewählte Karte im Array: " + werteClickKarte);
             console.log("gewählte Karte: " + colorClick + ", " + valueClick);
 
-        //prüfen ob Karte gespielt werden darf ???
-            if(colorClick == 'Black'){
-                wildColor = farbWechsel();
-                if (valueClick == '13') {
-                    //{error: 'Draw4NotAllowed'} -------------------- !!!!!!!!!! ----------------------
-                    if(darfPlus4Legen(kartenArray,colorAblage,valueAblage) == true){
-                        color = wildColor;
-                        value = valueClick;
-                        this.setAttribute("id","gespielteKarte");
-                        karteAblegen(value, color, wildColor);
-                        audioPlus4.play();
-                    } else {
-                        drawCard();
-                        alert("Diese Karte darfst du nur spielen, wenn du weder passende Farbe noch Wert legen kannst!" + "Zur Strafe musst du eine Karte ziehen!");
-                    }
-                } else if (valueClick == '14') {
-                    wildColor = farbWechsel();
-                    color = wildColor;
-                    value = valueClick;
-                    this.setAttribute("id","gespielteKarte");
-                    karteAblegen(value, color, wildColor);
+            //prüfen ob Karte gespielt werden darf
+            if (valueClick === valueAblage) {
+                color = colorClick;
+                value = valueClick;
+                this.setAttribute("id", "gespielteKarte");
+                karteAblegen(value, color, '');
+                audioCardflick.play();
+            } else if (colorClick === colorAblage) {
+                color = colorClick;
+                value = valueClick;
+                this.setAttribute("id", "gespielteKarte");
+                karteAblegen(value, color, '');
+                audioCardflick.play();
+            } else if (colorClick === 'Black') {
+                if (valueClick === '14') {
                     audioColor.play();
+                    blackCard(this, valueClick, colorAblage);
                 }
-            } else if(colorClick == colorAblage){
-                color = colorClick;
-                value = valueClick;
-                this.setAttribute("id","gespielteKarte");
-                karteAblegen(value, color, wildColor);
-                audioCardflick.play();
-            } else if(valueClick == valueAblage){
-                console.log("Wert = Wert " + valueClick + ", " + valueAblage);
-                color = colorClick;
-                value = valueClick;
-                this.setAttribute("id","gespielteKarte");
-                karteAblegen(value, color, wildColor);
-                audioCardflick.play();
+                if (valueClick === '13') {
+                    if (darfPlus4Legen(kartenArray, colorAblage, valueAblage) == true) {
+                        audioPlus4.play();
+                        blackCard(this, valueClick, colorAblage);
+                    } else {
+                        alert("Diese Karte darfst du nur spielen, wenn du weder passende Farbe noch Wert legen kannst!" + "Zur Strafe musst du eine Karte ziehen!");
+                        drawCard();
+                    }
+                }
             } else {
                 this.classList.add('shake');
                 shakeTimeout(this);
             }
-        }) }
+        })
+    }
     document.getElementById('hebestapel').addEventListener('click', drawCard);
 }
 
-function darfPlus4Legen(kartenArray,colorAblage,valueAblage){
+function blackCard(dort, value, color) {
+    let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
+    chooseColorModal.show();
+
+    document.getElementById('chooseRed').addEventListener('click', function (evt) {
+        evt.preventDefault();
+        chooseColorModal.hide();
+        let wildColor = 'Red';
+        dort.setAttribute("id", "gespielteKarte");
+        karteAblegen(value, color, wildColor);
+    });
+    document.getElementById('chooseYellow').addEventListener('click', function (evt) {
+        evt.preventDefault();
+        chooseColorModal.hide();
+        let wildColor = 'Yellow';
+        dort.setAttribute("id", "gespielteKarte");
+        karteAblegen(value, color, wildColor);
+    });
+    document.getElementById('chooseGreen').addEventListener('click', function (evt) {
+        evt.preventDefault();
+        chooseColorModal.hide();
+        let wildColor = 'Green';
+        dort.setAttribute("id", "gespielteKarte");
+        karteAblegen(value, color, wildColor);
+    });
+    document.getElementById('chooseBlue').addEventListener('click', function (evt) {
+        evt.preventDefault();
+        chooseColorModal.hide();
+        let wildColor = 'Blue';
+        dort.setAttribute("id", "gespielteKarte");
+        karteAblegen(value, color, wildColor);
+    });
+}
+
+function darfPlus4Legen(kartenArray, colorAblage, valueAblage) {
     let darfLegen = true;
     for (let i = 0; i < kartenArray.length; i++) {
-        let cardinfo = kartenArray[i].getKartenWerte(kartenArray[i].getAttribute('src'));
+        let cardinfo = kartenArray[i].getAttribute('src');
         let colorCard = cardinfo[0];
         let valueCard = cardinfo[1];
-        if(colorAblage == colorCard){
+        if (colorAblage == colorCard) {
             darfLegen = false;
         }
-        if(valueAblage == valueCard){
+        if (valueAblage == valueCard) {
             darfLegen = false;
         }
     }
     return darfLegen;
 }
 
-function shakeTimeout(element){
-    setTimeout(function() {
+function shakeTimeout(element) {
+    setTimeout(function () {
         element.classList.remove('shake');
         element.offsetWidth = element.offsetWidth;
-      }, 1000);
+    }, 1000);
 }
 
 function getKartenWerte(topKarte) {
     //console.log("in Funktion topKarte: " + topKarte);
     let arr = [];
     let valueArray = topKarte.split('');
-    let arrtemp = valueArray[valueArray.length-6];
-    //console.log("arrtemp = valueArray[valueArray.length-6] " + arrtemp);
+    let arrtemp = valueArray[valueArray.length - 6];
     let color;
     let value;
-    if(arrtemp == 1){
-        //console.log("Array gesliced für 2stellig: " + valueArray + " ------ !!! ------");
+    if (arrtemp == 1) {
         let sliceArray = valueArray.slice(-6, -4);
-        //console.log("VALUE sliceArray: " + sliceArray);
         value = `${sliceArray[0]}${sliceArray[1]}`;
-        //console.log("value nach sliceArray merge: " + value);
     } else {
         value = valueArray.slice(-5, -4);
-        //console.log("Array gesliced für 1stellig: " + valueArray);
-        //console.log("value sliced is: " + value);
     }
     if (topKarte.includes('Red') == true) {
         color = 'Red';
@@ -315,74 +309,11 @@ function getKartenWerte(topKarte) {
     }
     arr[0] = color;
     arr[1] = value;
-    //console.log("gewählte Karte ist: " + arr);
     return arr;
 }
 
-function farbWechsel() {
-    let colorWechsel;
-    let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
-    chooseColorModal.show();
-    document.getElementById('chooseRed').addEventListener('click', function (evt) {
-        ablageCard = 'Red14';
-        ablageBild.src = `${baseUrl}${ablageCard}.png`;
-        ablageStapel.appendChild(ablageBild);
-        evt.preventDefault();
-        chooseColorModal.hide();
-        return colorWechsel = 'Red';
-    });
-    document.getElementById('chooseYellow').addEventListener('click', function (evt) {
-        ablageCard = 'Yellow14';
-        ablageBild.src = `${baseUrl}${ablageCard}.png`;
-        ablageStapel.appendChild(ablageBild);
-        evt.preventDefault();
-        chooseColorModal.hide();
-        return colorWechsel = 'Yellow';
-    });
-    document.getElementById('chooseGreen').addEventListener('click', function (evt) {
-        ablageCard = 'Green14';
-        ablageBild.src = `${baseUrl}${ablageCard}.png`;
-        ablageStapel.appendChild(ablageBild);
-        evt.preventDefault();
-        chooseColorModal.hide();
-        return colorWechsel = 'Green';
-    });
-    document.getElementById('chooseBlue').addEventListener('click', function (evt) {
-        ablageCard = 'Blue14';
-        ablageBild.src = `${baseUrl}${ablageCard}.png`;
-        ablageStapel.appendChild(ablageBild);
-        evt.preventDefault();
-        chooseColorModal.hide();
-        return colorWechsel = 'Blue';
-    });
-}
 
-
-/*
-
-// Execute the function "doThis" with another function as parameter, in this case "andThenThis".
-//doThis will execute whatever code it has and when it finishes it should have "andThenThis" being executed.
-
-doThis(andThenThis)
-
-// Inside of "doThis" it's referenced as "callback" which is just a variable that is holding the reference to this function
-
-function andThenThis() {
-console.log('and then this')
-}
-
-// You can name it whatever you want, "callback" is common approach
-
-function doThis(callback) {
-console.log('this first')
-
-// the '()' is when you are telling your code to execute the function reference else it will just log the reference
-
-callback()
-}
-*/
-
-/*
+/*        
 async function neueTopCard(callback){
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/topCard/${spielID}`, { 
         method: 'GET',
@@ -394,50 +325,87 @@ async function neueTopCard(callback){
         
     }
     callback();
-} */
+} 
+function removeAblagekarte() {
+    let ablageKarte = document.getElementById('ablagestapel');
+    while (ablageKarte.firstChild) {
+        ablageKarte.removeChild(ablageKarte.firstChild);
+    }
+    console.log("AblageKarte " + ablageKarte);
+    //neueTopCard(erstelltAblage);
+    //erstelltAblage(neueTopCard); ------------------------------------------------- !????! Fehler !????! -----------------
+}        
+ 
+// Execute the function "doThis" with another function as parameter, in this case "andThenThis".
+//doThis will execute whatever code it has and when it finishes it should have "andThenThis" being executed.
+
+doThis(andThenThis)
+// Inside of "doThis" it's referenced as "callback" which is just a variable that is holding the reference to this function
+
+function andThenThis() {
+console.log('and then this')
+}
+
+// You can name it whatever you want, "callback" is common approach
+function doThis(callback) {
+console.log('this first')
+
+// the '()' is when you are telling your code to execute the function reference else it will just log the reference
+callback()
+}
+*/
 
 async function karteAblegen(value, color, wildColor) {
-    if(value == 13 || value == 14){
-        color = 'Black';
-    } else {
-        wildColor = '';
-    }
-    let plus2 = false;
-    if(value == 10){
-        plus2 = true;
-    }
-    console.log(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value=${value}&color=${color}&wildColor=${wildColor}`);
+    console.log("value,color,wild: " + `${value}${color}${wildColor}`)
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value=${value}&color=${color}&wildColor=${wildColor}`, {
         method: 'PUT',
     });
     let responseInfo;
     if (response.ok) {
         responseInfo = await response.json();
-        //alert("neuer Spieler ist dran: " + JSON.stringify(responseInfo));
-        console.log(responseInfo);
+        console.log("responseInfo " + JSON.stringify(responseInfo));
         if (responseInfo.error == 'WrongColor') {
             alert("Diese Karte hat die falsche Farbe!");
         } else if (responseInfo.error == 'IncorrectPlayer') {
             alert("Du bis nicht dran!");
-        } else if (responseInfo.error == 'Draw4NotAllowed'){
+        } else if (responseInfo.error == 'Draw4NotAllowed') {
             drawCard();
             alert("Draw4NotAllowed" + "zur Strafe musst du eine Karte ziehen!");
         } else {
-            if(unoRufen(aktiverSpieler) == true){
+            if (unoRufen(aktiverSpieler) == true) {
                 alert("UNO UNO UNO");
-            };
+            }
+            if (value == 13 || value == 14) {
+                document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${value}.png`);
+            } else {
+                document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
+            }
+            gewinner(aktiverSpieler);
             let spielkarte = document.getElementById('gespielteKarte');
-            spielkarte.classList.add('huiiiiWeg');
-            spielkarte.remove();
-            //removeAblage();
-            //erstelltAblage(spielkarte);
+            spielkarte.classList.add('fade-out-fwd');
+            removeTimeout(spielkarte);
+            beginNextPlayer(responseInfo, value);
         }
-        aktiverSpieler = responseInfo.Player;
-        spielerKartenErstellen(responseInfo);
     }
-    removeAblagekarte();
-    gewinner(aktiverSpieler);
+}
+
+function removeTimeout(element) {
+    setTimeout(function () {
+        element.remove();
+    }, 1000);
+}
+
+function beginNextPlayer(response, value) {
+    setTimeout(function(){
+    if (value == 10) {
+        console.log("playerliste, aktverSpieler " + playerListe + ", " + aktiverSpieler)
+    }
+
+    aktiverSpieler = response.Player;
+    erstesKartenErstellen(response);
+    ablageStapel.appendChild(ablageBild);
     focusAktivPlayer(aktiverSpieler);
+},2000);
 }
 
 
@@ -474,8 +442,8 @@ async function getCardsOf(player) {
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
     console.log(aktiverSpieler);
-    console.log("doc: " +document.getElementById(aktiverSpieler));
-    console.log("aP = "+aP);
+    console.log("doc: " + document.getElementById(aktiverSpieler));
+    console.log("aP = " + aP);
     if (aP.hasChildNodes() == false) {
         alert("Du hast gewonnen!!!");
         let myModal = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
