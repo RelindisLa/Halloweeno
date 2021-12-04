@@ -301,15 +301,15 @@ function getKartenWerte(topKarte) {
     } else {
         value = valueArray.slice(-5, -4);
     }
-    if (topKarte.includes('Red') == true) {
+    if (topKarte.includes('Red') === true) {
         color = 'Red';
-    } else if (topKarte.includes('Blue') == true) {
+    } else if (topKarte.includes('Blue') === true) {
         color = 'Blue';
-    } else if (topKarte.includes('Green') == true) {
+    } else if (topKarte.includes('Green') === true) {
         color = 'Green';
-    } else if (topKarte.includes('Yellow') == true) {
+    } else if (topKarte.includes('Yellow') === true) {
         color = 'Yellow';
-    } else if (topKarte.includes('Black') == true) {
+    } else if (topKarte.includes('Black') === true) {
         color = 'Black';
     } else {
         alert("Falsche Ablagekarte ausgelesen")
@@ -380,7 +380,7 @@ function beginNextPlayer(response) {// value für Abfrage +2/+4
 function unoRufen(aktiverSpieler) {
     let unoGerufen = true;
     let aP = document.getElementById(aktiverSpieler);
-    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
+    if (aP.hasChildNodes() === true && aP.childNodes.length === 1) {
         let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufen'));
         unoRufenModal.show();
 
