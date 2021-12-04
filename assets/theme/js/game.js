@@ -204,15 +204,14 @@ function playCard() {     //Spiellogik - > nur gültige Karten spielen:
             } else if (colorClick === 'Black') {
                 if (valueClick === '14') {
                     audioColor.play();
-                    blackCard(this, valueClick, colorAblage);
+                    blackCard(this, valueClick, colorClick);
                 }
                 if (valueClick === '13') {
                     if (darfPlus4Legen(kartenArray, colorAblage, valueAblage) == true) {
                         audioPlus4.play();
-                        blackCard(this, valueClick, colorAblage);
+                        blackCard(this, valueClick, colorClick);
                     } else {
-                        alert("Diese Karte darfst du nur spielen, wenn du weder passende Farbe noch Wert legen kannst!" + "Zur Strafe musst du eine Karte ziehen!");
-                        drawCard();
+                        alert("Diese Karte darfst du nur spielen, wenn du weder passende Farbe noch Wert legen kannst!");
                     }
                 }
             } else {
@@ -404,8 +403,9 @@ function beginNextPlayer(response, value) {
     aktiverSpieler = response.Player;
     erstesKartenErstellen(response);
     ablageStapel.appendChild(ablageBild);
+    ablageBild.classList.add('fade-in-fwd');
     focusAktivPlayer(aktiverSpieler);
-},2000);
+    },1200);
 }
 
 
