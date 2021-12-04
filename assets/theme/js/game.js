@@ -8,7 +8,7 @@ let ablageBild;
 let exit = false;
 const audioColor = new Audio('assets/sound/mixkit-cartoon-throat-laugh-745.wav');
 const audioPlus4 = new Audio('assets/sound/mixkit-little-devil-laughing-413.wav');
-const audioBackground = new Audio('assets/sound/Horrormusik.mp3')
+const audioCardflick = new Audio('assets/sound/mixkit-twig-breaking-2945.wav');
 
 
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
@@ -101,22 +101,47 @@ function erstPositionen(startinhalt) {
         let divA = document.createElement("div");
         divA.setAttribute("id", element.Player);
         wo.appendChild(divA);
-        element.Cards.forEach(el => {
-            const div = document.createElement("div");
-            div.setAttribute("style", "display: inline-block");
-            const img = document.createElement("img");
-            const card = `${el.Color}${el.Value}`;
-            img.src = `${baseUrl}${card}.png`;
-            img.setAttribute("class", `karte-${element.Player}`); //rounded d-block ??
-            img.setAttribute("style", "height: 80px; padding: 10px");
-            divA.appendChild(div);
-            div.appendChild(img);
-        })
-
+        spielerKartenErstellen2(element,divA);
         counter++;
     });
 }
 
+function spielerKartenErstellen(element){
+    let divA = document.getElementById(element.Player);
+    console.log("document.getElementById(element.Player) " + divA);
+    console.log("Element.player : " + element.Player);
+    while (divA.firstChild) {
+        divA.removeChild(divA.firstChild);
+    }
+    spielerKartenErstellen2(element,divA);
+}
+
+function spielerKartenErstellen2(element, divA){
+    element.Cards.forEach(el => {
+        const div = document.createElement("div");
+        div.setAttribute("style", "display: inline-block");
+        const img = document.createElement("img");
+        const card = `${el.Color}${el.Value}`;
+        img.src = `${baseUrl}${card}.png`;
+        img.setAttribute("class", `karte-${element.Player}`); //rounded d-block ??
+        img.setAttribute("style", "height: 80px; padding: 10px");
+        divA.appendChild(div);
+        div.appendChild(img);
+    })
+}
+/*
+function erstelltAblage(card) {
+    //Ablagestapel:
+    ablageStapel = document.getElementById("ablagestapel");
+    ablageBild = document.createElement("img");
+    ablageBild.setAttribute("style", "text-align: center; height: 100px;");
+    ablageBild.setAttribute("id", "ablageNeu");
+    ablageBild.setAttribute("class", "ablage123");
+    ablageCard = `${card.Color}${card.Value}`;
+    ablageBild.src = `${baseUrl}${ablageCard}.png`;
+    ablageStapel.appendChild(ablageBild);
+}
+*/
 function erstelltAblage(card) {
     //Ablagestapel:
     ablageStapel = document.getElementById("ablagestapel");
@@ -128,9 +153,13 @@ function erstelltAblage(card) {
     ablageStapel.appendChild(ablageBild);
 }
 function removeAblagekarte(){
-    let ablageKarte = document.getElementsByClassName('ablage123')[0];
-    ablageKarte.remove();
-    neueTopCard();
+    let ablageKarte = document.getElementById('ablagestapel');
+    while (ablageKarte.firstChild) {
+        ablageKarte.removeChild(ablageKarte.firstChild);
+    }
+    console.log("AblageKarte " + ablageKarte);
+    //neueTopCard(erstelltAblage);
+    //erstelltAblage(neueTopCard); ------------------------------------------------- !????! Fehler !????! -----------------
 }
 
 function erstelltHebestapel() {
@@ -159,12 +188,12 @@ function focusAktivPlayer(aktiverSpieler) {
     unfocus();
     let aP = document.getElementById(aktiverSpieler);
     aP.parentNode.classList.remove('unfocus');
-
     playCard();  //prüft karte, let karte ab, prüft gewinner, get next Player
-
 }
 
 function playCard() {
+    let color;
+    let value;
     //Spiellogik - > nur gültige Karten spielen:
     let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
     let werteAblage = getKartenWerte(ablageKarte);
@@ -172,7 +201,6 @@ function playCard() {
     let valueAblage = werteAblage[1];
     console.log("Ablagekarte: " + colorAblage + ", " + valueAblage);
 
-    //getCardsOf(aktiverSpieler);
     //Karte auswählen:
     let kartenArray = document.getElementsByClassName(`karte-${aktiverSpieler}`);
     //console.log("Karten des aktivenSpielers: " + kartenArray);
@@ -187,33 +215,63 @@ function playCard() {
             console.log("gewählte Karte: " + colorClick + ", " + valueClick);
 
         //prüfen ob Karte gespielt werden darf ???
-            if (valueClick == valueAblage || colorClick == colorAblage || colorClick == 'Black') {
-                console.log("Karte vor Farbwechsel: " + valueClick + ", " + colorClick);
-                if (valueClick == '14') {
-                    colorClick = farbWechsel();
-                    audioColor.play();
-                    wildColor = colorClick;
-                    console.log("Karte nach Farbwechsel: " + valueClick + ", " + colorClick);
-                }
+            if(colorClick == 'Black'){
+                wildColor = farbWechsel();
                 if (valueClick == '13') {
                     //{error: 'Draw4NotAllowed'} -------------------- !!!!!!!!!! ----------------------
-                    colorClick = farbWechsel();
-                    wildColor = colorClick;
-                    audioPlus4.play();
-                    console.log("Karte nach Farbwechsel: " + valueClick + ", " + colorClick);
+                    if(darfPlus4Legen(kartenArray,colorAblage,valueAblage) == true){
+                        color = wildColor;
+                        value = valueClick;
+                        this.setAttribute("id","gespielteKarte");
+                        karteAblegen(value, color, wildColor);
+                        audioPlus4.play();
+                    } else {
+                        drawCard();
+                        alert("Diese Karte darfst du nur spielen, wenn du weder passende Farbe noch Wert legen kannst!" + "Zur Strafe musst du eine Karte ziehen!");
+                    }
+                } else if (valueClick == '14') {
+                    wildColor = farbWechsel();
+                    color = wildColor;
+                    value = valueClick;
+                    this.setAttribute("id","gespielteKarte");
+                    karteAblegen(value, color, wildColor);
+                    audioColor.play();
                 }
-                
+            } else if(colorClick == colorAblage){
+                color = colorClick;
+                value = valueClick;
                 this.setAttribute("id","gespielteKarte");
-                //neueTopCard();
-                console.log("valueClick, colorClick, wildColor " + valueClick +", " + colorClick + ", " + wildColor);
-                karteAblegen(valueClick, colorClick, wildColor);
+                karteAblegen(value, color, wildColor);
+                audioCardflick.play();
+            } else if(valueClick == valueAblage){
+                console.log("Wert = Wert " + valueClick + ", " + valueAblage);
+                color = colorClick;
+                value = valueClick;
+                this.setAttribute("id","gespielteKarte");
+                karteAblegen(value, color, wildColor);
+                audioCardflick.play();
             } else {
                 this.classList.add('shake');
                 shakeTimeout(this);
             }
         }) }
-
     document.getElementById('hebestapel').addEventListener('click', drawCard);
+}
+
+function darfPlus4Legen(kartenArray,colorAblage,valueAblage){
+    let darfLegen = true;
+    for (let i = 0; i < kartenArray.length; i++) {
+        let cardinfo = kartenArray[i].getKartenWerte(kartenArray[i].getAttribute('src'));
+        let colorCard = cardinfo[0];
+        let valueCard = cardinfo[1];
+        if(colorAblage == colorCard){
+            darfLegen = false;
+        }
+        if(valueAblage == valueCard){
+            darfLegen = false;
+        }
+    }
+    return darfLegen;
 }
 
 function shakeTimeout(element){
@@ -222,7 +280,6 @@ function shakeTimeout(element){
         element.offsetWidth = element.offsetWidth;
       }, 1000);
 }
-
 
 function getKartenWerte(topKarte) {
     //console.log("in Funktion topKarte: " + topKarte);
@@ -325,6 +382,7 @@ callback()
 }
 */
 
+/*
 async function neueTopCard(callback){
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/topCard/${spielID}`, { 
         method: 'GET',
@@ -333,10 +391,10 @@ async function neueTopCard(callback){
     if (response.ok) {
         responseAblage = await response.json();
         console.log("Ablage neu: " + responseAblage);
-        erstelltAblage(responseAblage);
+        
     }
-    callback()
-}
+    callback();
+} */
 
 async function karteAblegen(value, color, wildColor) {
     if(value == 13 || value == 14){
@@ -355,14 +413,15 @@ async function karteAblegen(value, color, wildColor) {
     let responseInfo;
     if (response.ok) {
         responseInfo = await response.json();
-        alert("neuer Spieler ist dran: " + JSON.stringify(responseInfo));
+        //alert("neuer Spieler ist dran: " + JSON.stringify(responseInfo));
         console.log(responseInfo);
         if (responseInfo.error == 'WrongColor') {
             alert("Diese Karte hat die falsche Farbe!");
         } else if (responseInfo.error == 'IncorrectPlayer') {
             alert("Du bis nicht dran!");
         } else if (responseInfo.error == 'Draw4NotAllowed'){
-            alert("Du darfst die +4 erst spielen wenn du sonst keine Karten legen kannst");
+            drawCard();
+            alert("Draw4NotAllowed" + "zur Strafe musst du eine Karte ziehen!");
         } else {
             if(unoRufen(aktiverSpieler) == true){
                 alert("UNO UNO UNO");
@@ -374,8 +433,9 @@ async function karteAblegen(value, color, wildColor) {
             //erstelltAblage(spielkarte);
         }
         aktiverSpieler = responseInfo.Player;
-        
+        spielerKartenErstellen(responseInfo);
     }
+    removeAblagekarte();
     gewinner(aktiverSpieler);
     focusAktivPlayer(aktiverSpieler);
 }
@@ -397,7 +457,7 @@ function unoRufen(aktiverSpieler) {
     }
 }
 
-
+/*
 // SpielerInfo vom Server holen:
 async function getCardsOf(player) {
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
@@ -406,10 +466,10 @@ async function getCardsOf(player) {
     let infoPlayerAbfrage;
     if (response.ok) {
         infoPlayerAbfrage = await response.json(); // response Body auslesen
-        alert("infoPlayerAbfrage: " + JSON.stringify(infoPlayerAbfrage));
+        //alert("infoPlayerAbfrage: " + JSON.stringify(infoPlayerAbfrage));
     }
-
 }
+*/
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
