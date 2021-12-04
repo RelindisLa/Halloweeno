@@ -55,14 +55,11 @@ async function startGame(callback) {
     });
     if (response.ok) { // wenn http-status zwischen 200 und 299 liegt
         let startinhalt = await response.json(); // response Body auslesen
-
         spielID = startinhalt.Id;
-        console.log("Spielid im response " + spielID);
         erstelltAblage(startinhalt.TopCard);
         erstPositionen(startinhalt);
         erstelltHebestapel();
         aktiverSpieler = startinhalt.NextPlayer;
-        console.log("Startspieler im response: " + aktiverSpieler);
         //alert("startinhalt: " + JSON.stringify(startinhalt));
     }
     callback()
@@ -106,17 +103,17 @@ function erstPositionen(startinhalt) {
 }
 
 function erstesKartenErstellen(element) {
-    let divA = document.getElementById(element.Player);
-    console.log("document.getElementById(element.Player) " + divA);
-    console.log("Element.player : " + element.Player);
-    let kartendelete = document.getElementsByClassName(`karte-${aktiverSpieler}`);
-    while (kartendelete.hasChildNodes == true) {
-        kartendelete.removeChild(kartendelete.firstChild);
+    let colletion = document.getElementsByClassName(`karte-${aktiverSpieler}`);
+    for (let index = 0; index < colletion.length; index++) {
+        const element = colletion[index];
+        let parent = element.parentNode;
+            parent.removeChild(element);
     }
-    spielerKartenErstellen(element, divA);
+    spielerKartenErstellen(element);
 }
 
-function spielerKartenErstellen(element, divA) {
+function spielerKartenErstellen(element) {
+    let divA = document.getElementById(element.Player);
     element.Cards.forEach(el => {
         const div = document.createElement("div");
         div.setAttribute("style", "display: inline-block");
@@ -311,6 +308,136 @@ function getKartenWerte(topKarte) {
     return arr;
 }
 
+async function karteAblegen(value, color, wildColor) {
+    console.log("gespielt wird: " + `${value}${color}${wildColor}`)
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value=${value}&color=${color}&wildColor=${wildColor}`, {
+        method: 'PUT',
+    });
+    let responseInfo;
+    if (response.ok) {
+        responseInfo = await response.json();
+        console.log("responseInfo " + JSON.stringify(responseInfo));
+        if (responseInfo.error == 'WrongColor') {
+            consol.log("Diese Karte hat die falsche Farbe!");
+        } else if (responseInfo.error == 'IncorrectPlayer') {
+            console.log("Du bis nicht dran!");
+        } else if (responseInfo.error == 'Draw4NotAllowed') {
+            drawCard();
+            console.log("Draw4NotAllowed" + "zur Strafe musst du eine Karte ziehen!");
+        } else {
+            if (unoRufen(aktiverSpieler) == true) {
+                alert("UNO UNO UNO");
+            }
+            if (value === '13' || value === '14') {
+                document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${value}.png`);
+            } else {
+                document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
+            }
+            gewinner(aktiverSpieler);
+            let spielkarte = document.getElementById('gespielteKarte');
+            spielkarte.classList.add('fade-out-fwd');
+            removeTimeout(spielkarte);
+            beginNextPlayer(responseInfo, value);
+            console.log("alter spieler ist: " + aktiverSpieler);
+        }
+    }
+}
+
+function removeTimeout(element) {
+    setTimeout(function () {
+        element.remove();
+    }, 800);
+}
+
+function beginNextPlayer(response, value) {
+    setTimeout(function () {
+        if (value === '10' || value === '13') {
+            console.log("playerliste, aktverSpieler " + playerListe + ", " + aktiverSpieler)
+            for (let index = 0; index < playerListe.length; index++) {
+                let needCards = document.getElementById(playerListe[index-1]);
+                getCardsOf(playerListe[index-1]);
+
+            }
+           
+        }
+
+        aktiverSpieler = response.Player;
+        console.log("neuer spieler ist: " + aktiverSpieler);
+        erstesKartenErstellen(response);
+        ablageBild.classList.add('rotate-vert-center');
+        ablageStapel.appendChild(ablageBild);
+
+        focusAktivPlayer(aktiverSpieler);
+    }, 1000);
+}
+
+async function getCardsOf(player) {
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
+        method: 'GET',
+    });
+    let infoPlayerAbfrage;
+    if (response.ok) {
+        infoPlayerAbfrage = await response.json(); // response Body auslesen
+        console.log("+2/+4 übersprSpielerAbfrage: " + JSON.stringify(infoPlayerAbfrage));
+        erstesKartenErstellen(response);
+    }
+}
+
+function unoRufen(aktiverSpieler) {
+    let unoGerufen = true;
+    let aP = document.getElementById(aktiverSpieler);
+    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
+        let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufen'));
+        unoRufenModal.show();
+
+        document.getElementById('unoYes').addEventListener('submit', function (evt) {
+            unoGerufen = true;
+            evt.preventDefault();
+            unoRufenModal.hide();
+            return unoGerufen;
+        });
+    }
+}
+
+function gewinner(aktiverSpieler) {
+    let aP = document.getElementById(aktiverSpieler);
+    if (aP.hasChildNodes() == false) {
+        alert("Du hast gewonnen!!!");
+        let myModal = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
+        //exit = true;
+    }
+}
+
+// Karte ziehen
+async function drawCard() {
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
+        method: 'PUT',
+    });
+    let newCard;
+    if (response.ok) {
+        newCard = await response.json(); // response Body auslesen
+        //alert("neue Karte: " + JSON.stringify(newCard));
+        console.log(newCard);
+        addCard(newCard.Card);
+        aktiverSpieler = newCard.NextPlayer;
+        focusAktivPlayer(aktiverSpieler);
+    }
+}
+
+//gezogene Karte dem Spieler hinzufügen
+function addCard(el) {
+    let wo = document.getElementById(aktiverSpieler);
+    let div = document.createElement("div");
+    div.setAttribute("style", "display: inline-block");
+    const img = document.createElement("img");
+    const card = `${el.Color}${el.Value}`;
+    img.src = `${baseUrl}${card}.png`;
+    img.setAttribute("class", "rounded d-block");
+    img.setAttribute("style", "height: 80px; padding: 10px");
+    wo.appendChild(div);
+    div.appendChild(img);
+}
+
 
 /*        
 async function neueTopCard(callback){
@@ -353,134 +480,6 @@ console.log('this first')
 callback()
 }
 */
-
-async function karteAblegen(value, color, wildColor) {
-    console.log("value,color,wild: " + `${value}${color}${wildColor}`)
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value=${value}&color=${color}&wildColor=${wildColor}`, {
-        method: 'PUT',
-    });
-    let responseInfo;
-    if (response.ok) {
-        responseInfo = await response.json();
-        console.log("responseInfo " + JSON.stringify(responseInfo));
-        if (responseInfo.error == 'WrongColor') {
-            alert("Diese Karte hat die falsche Farbe!");
-        } else if (responseInfo.error == 'IncorrectPlayer') {
-            alert("Du bis nicht dran!");
-        } else if (responseInfo.error == 'Draw4NotAllowed') {
-            drawCard();
-            alert("Draw4NotAllowed" + "zur Strafe musst du eine Karte ziehen!");
-        } else {
-            if (unoRufen(aktiverSpieler) == true) {
-                alert("UNO UNO UNO");
-            }
-            if (value == 13 || value == 14) {
-                document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${value}.png`);
-            } else {
-                document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
-            }
-            gewinner(aktiverSpieler);
-            let spielkarte = document.getElementById('gespielteKarte');
-            spielkarte.classList.add('fade-out-fwd');
-            removeTimeout(spielkarte);
-            beginNextPlayer(responseInfo, value);
-        }
-    }
-}
-
-function removeTimeout(element) {
-    setTimeout(function () {
-        element.remove();
-    }, 1000);
-}
-
-function beginNextPlayer(response, value) {
-    setTimeout(function(){
-    if (value == 10) {
-        console.log("playerliste, aktverSpieler " + playerListe + ", " + aktiverSpieler)
-    }
-
-    aktiverSpieler = response.Player;
-    erstesKartenErstellen(response);
-    ablageStapel.appendChild(ablageBild);
-    ablageBild.classList.add('fade-in-fwd');
-    focusAktivPlayer(aktiverSpieler);
-    },1200);
-}
-
-
-function unoRufen(aktiverSpieler) {
-    let unoGerufen = true;
-    let aP = document.getElementById(aktiverSpieler);
-    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
-        let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufen'));
-        unoRufenModal.show();
-
-        document.getElementById('unoYes').addEventListener('submit', function (evt) {
-            unoGerufen = true;
-            evt.preventDefault();
-            unoRufenModal.hide();
-            return unoGerufen;
-        });
-    }
-}
-
-/*
-// SpielerInfo vom Server holen:
-async function getCardsOf(player) {
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
-        method: 'GET',
-    });
-    let infoPlayerAbfrage;
-    if (response.ok) {
-        infoPlayerAbfrage = await response.json(); // response Body auslesen
-        //alert("infoPlayerAbfrage: " + JSON.stringify(infoPlayerAbfrage));
-    }
-}
-*/
-
-function gewinner(aktiverSpieler) {
-    let aP = document.getElementById(aktiverSpieler);
-    console.log(aktiverSpieler);
-    console.log("doc: " + document.getElementById(aktiverSpieler));
-    console.log("aP = " + aP);
-    if (aP.hasChildNodes() == false) {
-        alert("Du hast gewonnen!!!");
-        let myModal = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
-        //exit = true;
-    }
-}
-
-// Karte ziehen
-async function drawCard() {
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
-        method: 'PUT',
-    });
-    let newCard;
-    if (response.ok) {
-        newCard = await response.json(); // response Body auslesen
-        //alert("neue Karte: " + JSON.stringify(newCard));
-        console.log(newCard);
-        addCard(newCard.Card);
-        aktiverSpieler = newCard.NextPlayer;
-        focusAktivPlayer(aktiverSpieler);
-    }
-}
-
-//gezogene Karte dem Spieler hinzufügen
-function addCard(el) {
-    let wo = document.getElementById(aktiverSpieler);
-    let div = document.createElement("div");
-    div.setAttribute("style", "display: inline-block");
-    const img = document.createElement("img");
-    const card = `${el.Color}${el.Value}`;
-    img.src = `${baseUrl}${card}.png`;
-    img.setAttribute("class", "rounded d-block");
-    img.setAttribute("style", "height: 80px; padding: 10px");
-    wo.appendChild(div);
-    div.appendChild(img);
-}
-
 
 
 
