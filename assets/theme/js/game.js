@@ -90,7 +90,7 @@ function erstPositionen(startinhalt) {
 
         let playerScore = document.createElement("p");
         playerScore.setAttribute("style", "text-align: center; padding-top: 10px");
-        playerScore.setAttribute("id","score");
+        playerScore.setAttribute("id",`score${element.Player}`);
         let textScore = document.createTextNode("Score: " + element.Score);
         wo.appendChild(playerScore);
         playerScore.appendChild(textScore);
@@ -211,7 +211,11 @@ function playCard() {     //Spiellogik - > nur gültige Karten spielen:
             } else if (colorClick === 'Black') {
                 if (valueClick === '14') {
                     audioColor.play();
-                    blackCard(this, valueClick, colorClick);
+                    if(valueAblage === '13' || valueAblage === '14'){
+                        karteAblegen(valueClick, colorClick, colorAblage);
+                    } else {
+                        blackCard(this, valueClick, colorClick);
+                    }
                 }
                 if (valueClick === '13') {
                     if (darfPlus4Legen(kartenArray, colorAblage) == true) {
@@ -343,7 +347,6 @@ async function karteAblegen(value, color, wildColor) {
                 document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
             }
             gewinner(aktiverSpieler);
-            document.getElementById('score').innerHtml = responseInfo.Score;
             let spielkarte = document.getElementById('gespielteKarte');
             spielkarte.classList.add('swirl-out-bck');
             removeTimeout(spielkarte);
@@ -364,6 +367,7 @@ function beginNextPlayer(response) {// value für Abfrage +2/+4
         //if (value === '10' || value === '13') { karten holen und zeigen
         
         aktiverSpieler = response.Player;
+        document.getElementById(`score${aktiverSpieler}`).innerHTML = `${response.Score}`;
         console.log("neuer spieler ist: " + aktiverSpieler);
         erstesKartenErstellen(response);
         ablageBild.classList.add('rotate-vert-center');
