@@ -104,12 +104,28 @@ function erstPositionen(startinhalt) {
 }
 
 function erstesKartenErstellen(element) {
+<<<<<<< HEAD
     let box = document.getElementById(`${element.Player}`);
     if (box.hasChildNodes()) {
         while (box.firstChild) { 
             box.removeChild(box.firstChild); 
     }
         spielerKartenErstellen(element);
+=======
+    let collection = document.getElementById(`${aktiverSpieler}`).childNodes;
+    /*
+    let counter = 1;
+    while(counter <= collection.length){
+        let parent = collection.item(counter).parentNode;
+        parent.removeChild(collection.item(counter));
+        counter++;
+    }
+    /*/
+    for (let index = 0; index < collection.length; index++) {
+        const element = collection[index];
+        let parent = element.parentNode;
+            parent.removeChild(element);
+>>>>>>> fcb7af91923a13a4e165932acef2b68d735c7326
     }
 }
 
@@ -194,7 +210,7 @@ function playCard() {
             console.log("gewählte Karte: " + colorClick + ", " + valueClick);
 
             //prüfen ob Karte gespielt werden darf
-            if (valueClick === valueAblage && valueClick != '13' && valueClick != '14') {
+            if (valueClick === valueAblage && valueClick !== '13' && valueClick !== '14') {
                 //color = colorClick;
                 //value = valueClick;
                 this.setAttribute("id", "gespielteKarte");
@@ -216,7 +232,7 @@ function playCard() {
                     }
                 }
                 if (valueClick === '13') {
-                    if (darfPlus4Legen(kartenArray, colorAblage) == true) {
+                    if (darfPlus4Legen(kartenArray, colorAblage) === true) {
                         audioPlus4.play();
                         blackCard(this, valueClick, colorClick);
                     } else {
@@ -272,7 +288,7 @@ function darfPlus4Legen(kartenArray, colorAblage) {
     for (let i = 0; i < kartenArray.length; i++) {
         let cardinfo = kartenArray[i].getAttribute('src');
         let colorCard = cardinfo[0];
-        if (colorAblage == colorCard) {
+        if (colorAblage === colorCard) {
             darfLegen = false;
         }
     }
@@ -293,22 +309,22 @@ function getKartenWerte(topKarte) {
     let arrtemp = valueArray[valueArray.length - 6];
     let color;
     let value;
-    if (arrtemp == 1) {
+    if (arrtemp === 1) {
         let sliceArray = valueArray.slice(-6, -4);
         value = `${sliceArray[0]}${sliceArray[1]}`;
     } else {
         let sliceArray = valueArray.slice(-5, -4);
         value = `${sliceArray}`;
     }
-    if (topKarte.includes('Red') == true) {
+    if (topKarte.includes('Red') === true) {
         color = 'Red';
-    } else if (topKarte.includes('Blue') == true) {
+    } else if (topKarte.includes('Blue') === true) {
         color = 'Blue';
-    } else if (topKarte.includes('Green') == true) {
+    } else if (topKarte.includes('Green') === true) {
         color = 'Green';
-    } else if (topKarte.includes('Yellow') == true) {
+    } else if (topKarte.includes('Yellow') === true) {
         color = 'Yellow';
-    } else if (topKarte.includes('Black') == true) {
+    } else if (topKarte.includes('Black') === true) {
         color = 'Black';
     } else {
         alert("Falsche Ablagekarte ausgelesen")
@@ -327,17 +343,17 @@ async function karteAblegen(value, color, wildColor) {
     if (response.ok) {
         responseInfo = await response.json();
         console.log("responseInfo " + JSON.stringify(responseInfo));
-        if (responseInfo.error == 'WrongColor') {
+        if (responseInfo.error === 'WrongColor') {
             console.log("Diese Karte hat die falsche Farbe!");
             aktiverSpieler = aktiverSpieler;
-        } else if (responseInfo.error == 'IncorrectPlayer') {
+        } else if (responseInfo.error === 'IncorrectPlayer') {
             console.log("Du bis nicht dran!");
             aktiverSpieler = aktiverSpieler;
-        } else if (responseInfo.error == 'Draw4NotAllowed') {
+        } else if (responseInfo.error === 'Draw4NotAllowed') {
             console.log("Draw4NotAllowed");
             aktiverSpieler = aktiverSpieler;
         } else {
-            if (unoRufen(aktiverSpieler) == true) {
+            if (unoRufen(aktiverSpieler) === true) {
                 alert("UNO UNO UNO");
             }
             if (value === '13' || value === '14') {
@@ -395,7 +411,7 @@ function unoRufen(aktiverSpieler) {
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
-    if (aP.hasChildNodes() == false) {
+    if (aP.hasChildNodes() === false) {
         alert("Du hast gewonnen!!!");
         let myModal = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
         //exit = true;
