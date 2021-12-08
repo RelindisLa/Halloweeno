@@ -90,7 +90,7 @@ function erstPositionen(startinhalt) {
 
         let playerScore = document.createElement("p");
         playerScore.setAttribute("style", "text-align: center; padding-top: 10px");
-        playerScore.setAttribute("id",`score${element.Player}`);
+        playerScore.setAttribute("id", `score${element.Player}`);
         let textScore = document.createTextNode("Score: " + element.Score);
         wo.appendChild(playerScore);
         playerScore.appendChild(textScore);
@@ -104,28 +104,12 @@ function erstPositionen(startinhalt) {
 }
 
 function erstesKartenErstellen(element) {
-<<<<<<< HEAD
     let box = document.getElementById(`${element.Player}`);
     if (box.hasChildNodes()) {
-        while (box.firstChild) { 
-            box.removeChild(box.firstChild); 
-    }
+        while (box.firstChild) {
+            box.removeChild(box.firstChild);
+        }
         spielerKartenErstellen(element);
-=======
-    let collection = document.getElementById(`${aktiverSpieler}`).childNodes;
-    /*
-    let counter = 1;
-    while(counter <= collection.length){
-        let parent = collection.item(counter).parentNode;
-        parent.removeChild(collection.item(counter));
-        counter++;
-    }
-    /*/
-    for (let index = 0; index < collection.length; index++) {
-        const element = collection[index];
-        let parent = element.parentNode;
-            parent.removeChild(element);
->>>>>>> fcb7af91923a13a4e165932acef2b68d735c7326
     }
 }
 
@@ -185,8 +169,9 @@ function focusAktivPlayer(aktiverSpieler) {
     playCard();  //prüft karte, let karte ab, prüft gewinner, get next Player
 }
 
-function playCard() {  
-    unoRufen(aktiverSpieler);
+function playCard() {
+
+gewinner(aktiverSpieler);
 
     //Spiellogik - > nur gültige Karten spielen:
     //Ablage holen zum Vergleichen
@@ -201,8 +186,6 @@ function playCard() {
     for (let i = 0; i < kartenArray.length; i++) {
         kartenArray[i].addEventListener("click", function () {
             this.classList.add('vibrate-1');
-            //let color;
-            //let value;
             let wasAuchImmer = this.getAttribute('src')
             let werteClickKarte = getKartenWerte(wasAuchImmer);
             let colorClick = werteClickKarte[0];
@@ -211,21 +194,17 @@ function playCard() {
 
             //prüfen ob Karte gespielt werden darf
             if (valueClick === valueAblage && valueClick !== '13' && valueClick !== '14') {
-                //color = colorClick;
-                //value = valueClick;
                 this.setAttribute("id", "gespielteKarte");
                 karteAblegen(valueClick, colorClick, '');
                 audioCardflick.play();
             } else if (colorClick === colorAblage) {
-                //color = colorClick;
-                //value = valueClick;
                 this.setAttribute("id", "gespielteKarte");
                 karteAblegen(valueClick, colorClick, '');
                 audioCardflick.play();
             } else if (colorClick === 'Black') {
                 if (valueClick === '14') {
                     audioColor.play();
-                    if(valueAblage === '13' || valueAblage === '14'){
+                    if (valueAblage === '13' || valueAblage === '14') {
                         karteAblegen(valueClick, colorClick, colorAblage);
                     } else {
                         blackCard(this, valueClick, colorClick);
@@ -303,7 +282,6 @@ function shakeTimeout(element) {
 }
 
 function getKartenWerte(topKarte) {
-    //console.log("in Funktion topKarte: " + topKarte);
     let arr = [];
     let valueArray = topKarte.split('');
     let arrtemp = valueArray[valueArray.length - 6];
@@ -381,7 +359,6 @@ function beginNextPlayer(response) {// value für Abfrage +2/+4
     playerListe.forEach(element => getCardsOf(element));
 
     setTimeout(function () {
-        //if (value === '10' || value === '13') { karten holen und zeigen
         aktiverSpieler = response.Player;
         document.getElementById(`score${aktiverSpieler}`).innerHTML = `${response.Score}`;
         console.log("neuer spieler ist: " + aktiverSpieler);
@@ -394,28 +371,32 @@ function beginNextPlayer(response) {// value für Abfrage +2/+4
 }
 
 function unoRufen(aktiverSpieler) {
-    let unoGerufen = true;
+    let unoGerufen = false;
     let aP = document.getElementById(aktiverSpieler);
-   // if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
-        let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufenModal'));
-        unoRufenModal.show();
+    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
+        if (unoGerufen != true) {
+            let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufenModal'));
+            unoRufenModal.show();
 
-        document.getElementById('unoYes').addEventListener('submit', function (evt) {
-            unoGerufen = true;
-            evt.preventDefault();
-            unoRufenModal.hide();
-            return unoGerufen;
-        });
-    //}
+            document.getElementById('unoYes').addEventListener('submit', function (evt) {
+                unoGerufen = true;
+                evt.preventDefault();
+                unoRufenModal.hide();
+                return unoGerufen;
+            });
+        }
+    }
 }
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
-    if (aP.hasChildNodes() === false) {
+    //if (aP.hasChildNodes() === false) {   // ---------------------------------------- testen -----------------------------------------
         alert("Du hast gewonnen!!!");
-        let myModal = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
+        let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
+        //document.getElementById('winnerVideo').addEventListener('submit', function (evt) {
+        myModalEnde.show();
         //exit = true;
-    }
+    //}  // --------------------------------------------------------------------------- testen ----------------------------------------------
 }
 
 // Karte ziehen
@@ -459,51 +440,7 @@ async function getCardsOf(player) {
     }
 }
 
-/*        
-
-if (value === '10' || value === '13') {
-            console.log("playerliste, aktverSpieler " + playerListe + ", " + aktiverSpieler)
-            for (let index = 0; index < playerListe.length; index++) {
-                let needCards = document.getElementById(playerListe[index-1]);
-                //getCardsOf(playerListe[index-1]);
-
-            }
-        }
-
-  let counter = 1;
-    while(counter <= colletion.length){
-        let parent = colletion.item(counter).parentNode;
-        parent.removeChild(colletion.item(counter));
-        counter++;
-    }
-    for (let index = 0; index < colletion.length; index++) {
-        const element = colletion[index];
-        let parent = element.parentNode;
-            parent.removeChild(element);
-    }
-
-async function neueTopCard(callback){
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/topCard/${spielID}`, { 
-        method: 'GET',
-    });
-    let responseAblage;
-    if (response.ok) {
-        responseAblage = await response.json();
-        console.log("Ablage neu: " + responseAblage);
-        
-    }
-    callback();
-} 
-function removeAblagekarte() {
-    let ablageKarte = document.getElementById('ablagestapel');
-    while (ablageKarte.firstChild) {
-        ablageKarte.removeChild(ablageKarte.firstChild);
-    }
-    console.log("AblageKarte " + ablageKarte);
-    //neueTopCard(erstelltAblage);
-    //erstelltAblage(neueTopCard); ------------------------------------------------- !????! Fehler !????! -----------------
-}        
- 
+/*
 // Execute the function "doThis" with another function as parameter, in this case "andThenThis".
 //doThis will execute whatever code it has and when it finishes it should have "andThenThis" being executed.
 
@@ -522,7 +459,3 @@ console.log('this first')
 callback()
 }
 */
-
-
-
-
