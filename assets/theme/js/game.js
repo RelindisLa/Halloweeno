@@ -98,31 +98,25 @@ function erstPositionen(startinhalt) {
         let divA = document.createElement("div");
         divA.setAttribute("id", element.Player);
         wo.appendChild(divA);
-        spielerKartenErstellen(element, divA);
+        spielerKartenErstellen(element);
         counter++;
     });
 }
 
 function erstesKartenErstellen(element) {
-    let colletion = document.getElementById(`${aktiverSpieler}`).childNodes;
-    /*
-    let counter = 1;
-    while(counter <= colletion.length){
-        let parent = colletion.item(counter).parentNode;
-        parent.removeChild(colletion.item(counter));
-        counter++;
+    let box = document.getElementById(`${element.Player}`);
+    if (box.hasChildNodes()) {
+        while (box.firstChild) { 
+            box.removeChild(box.firstChild); 
     }
-    /*/
-    for (let index = 0; index < colletion.length; index++) {
-        const element = colletion[index];
-        let parent = element.parentNode;
-            parent.removeChild(element);
+        spielerKartenErstellen(element);
     }
-    spielerKartenErstellen(element);
 }
 
 function spielerKartenErstellen(element) {
     let divA = document.getElementById(element.Player);
+    console.log("divA imSpielerKartenErstellen: " + divA);
+
     element.Cards.forEach(el => {
         const div = document.createElement("div");
         div.setAttribute("style", "display: inline-block");
@@ -131,8 +125,8 @@ function spielerKartenErstellen(element) {
         img.src = `${baseUrl}${card}.png`;
         img.setAttribute("class", `karte-${element.Player}`); //rounded d-block ??
         img.setAttribute("style", "height: 80px; padding: 10px");
-        divA.appendChild(div);
         div.appendChild(img);
+        divA.appendChild(div);
     })
 }
 
@@ -175,7 +169,10 @@ function focusAktivPlayer(aktiverSpieler) {
     playCard();  //prüft karte, let karte ab, prüft gewinner, get next Player
 }
 
-function playCard() {     //Spiellogik - > nur gültige Karten spielen:
+function playCard() {  
+    unoRufen(aktiverSpieler);
+
+    //Spiellogik - > nur gültige Karten spielen:
     //Ablage holen zum Vergleichen
     let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
     let werteAblage = getKartenWerte(ablageKarte);
@@ -190,7 +187,8 @@ function playCard() {     //Spiellogik - > nur gültige Karten spielen:
             this.classList.add('vibrate-1');
             //let color;
             //let value;
-            let werteClickKarte = getKartenWerte(this.getAttribute('src'));
+            let wasAuchImmer = this.getAttribute('src')
+            let werteClickKarte = getKartenWerte(wasAuchImmer);
             let colorClick = werteClickKarte[0];
             let valueClick = werteClickKarte[1];
             console.log("gewählte Karte: " + colorClick + ", " + valueClick);
@@ -299,7 +297,8 @@ function getKartenWerte(topKarte) {
         let sliceArray = valueArray.slice(-6, -4);
         value = `${sliceArray[0]}${sliceArray[1]}`;
     } else {
-        value = valueArray.slice(-5, -4);
+        let sliceArray = valueArray.slice(-5, -4);
+        value = `${sliceArray}`;
     }
     if (topKarte.includes('Red') == true) {
         color = 'Red';
@@ -363,9 +362,10 @@ function removeTimeout(element) {
 }
 
 function beginNextPlayer(response) {// value für Abfrage +2/+4
+    playerListe.forEach(element => getCardsOf(element));
+
     setTimeout(function () {
         //if (value === '10' || value === '13') { karten holen und zeigen
-        
         aktiverSpieler = response.Player;
         document.getElementById(`score${aktiverSpieler}`).innerHTML = `${response.Score}`;
         console.log("neuer spieler ist: " + aktiverSpieler);
@@ -380,8 +380,8 @@ function beginNextPlayer(response) {// value für Abfrage +2/+4
 function unoRufen(aktiverSpieler) {
     let unoGerufen = true;
     let aP = document.getElementById(aktiverSpieler);
-    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
-        let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufen'));
+   // if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
+        let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufenModal'));
         unoRufenModal.show();
 
         document.getElementById('unoYes').addEventListener('submit', function (evt) {
@@ -390,7 +390,7 @@ function unoRufen(aktiverSpieler) {
             unoRufenModal.hide();
             return unoGerufen;
         });
-    }
+    //}
 }
 
 function gewinner(aktiverSpieler) {
@@ -431,7 +431,17 @@ function addCard(el) {
     wo.appendChild(div);
     div.appendChild(img);
 }
-
+async function getCardsOf(player) {
+    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
+        method: 'GET',
+    });
+    let infoPlayerAbfrage;
+    if (response.ok) {
+        infoPlayerAbfrage = await response.json(); // response Body auslesen
+        console.log("abfrage Kards of: " + player + " hat Karten: " + JSON.stringify(infoPlayerAbfrage));
+        erstesKartenErstellen(infoPlayerAbfrage);
+    }
+}
 
 /*        
 
@@ -444,19 +454,17 @@ if (value === '10' || value === '13') {
             }
         }
 
-async function getCardsOf(player) {
-    let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
-        method: 'GET',
-    });
-    let infoPlayerAbfrage;
-    if (response.ok) {
-        infoPlayerAbfrage = await response.json(); // response Body auslesen
-        console.log("+2/+4 übersprSpielerAbfrage: " + JSON.stringify(infoPlayerAbfrage));
-        erstesKartenErstellen(response);
+  let counter = 1;
+    while(counter <= colletion.length){
+        let parent = colletion.item(counter).parentNode;
+        parent.removeChild(colletion.item(counter));
+        counter++;
     }
-}
-
-
+    for (let index = 0; index < colletion.length; index++) {
+        const element = colletion[index];
+        let parent = element.parentNode;
+            parent.removeChild(element);
+    }
 
 async function neueTopCard(callback){
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/topCard/${spielID}`, { 
