@@ -171,7 +171,7 @@ function focusAktivPlayer(aktiverSpieler) {
 
 function playCard() {
 
-gewinner(aktiverSpieler);
+    //gewinner(aktiverSpieler);
 
     //Spiellogik - > nur gültige Karten spielen:
     //Ablage holen zum Vergleichen
@@ -195,24 +195,35 @@ gewinner(aktiverSpieler);
             //prüfen ob Karte gespielt werden darf
             if (valueClick === valueAblage && valueClick !== '13' && valueClick !== '14') {
                 this.setAttribute("id", "gespielteKarte");
-                karteAblegen(valueClick, colorClick, '');
+                unoRufen(aktiverSpieler);
                 audioCardflick.play();
+                karteAblegen(valueClick, colorClick, '');
             } else if (colorClick === colorAblage) {
                 this.setAttribute("id", "gespielteKarte");
-                karteAblegen(valueClick, colorClick, '');
+                unoRufen(aktiverSpieler);
                 audioCardflick.play();
+                karteAblegen(valueClick, colorClick, '');
             } else if (colorClick === 'Black') {
-                if (valueClick === '14') {
+                if (valueClick === '14') { //Farbwechsel
                     audioColor.play();
                     if (valueAblage === '13' || valueAblage === '14') {
+                        this.setAttribute("id", "gespielteKarte");
+                        unoRufen(aktiverSpieler);
+                        audioCardflick.play();
                         karteAblegen(valueClick, colorClick, colorAblage);
                     } else {
+                        this.setAttribute("id", "gespielteKarte");
+                        unoRufen(aktiverSpieler);
+                        audioCardflick.play();
                         blackCard(this, valueClick, colorClick);
                     }
                 }
-                if (valueClick === '13') {
+                if (valueClick === '13') { //+4
                     if (darfPlus4Legen(kartenArray, colorAblage) === true) {
+                        this.setAttribute("id", "gespielteKarte");
                         audioPlus4.play();
+                        unoRufen(aktiverSpieler);
+                        audioCardflick.play();
                         blackCard(this, valueClick, colorClick);
                     } else {
                         alert("Diese Karte darfst du nur spielen, wenn du weder passende Farbe noch Wert legen kannst!");
@@ -262,13 +273,17 @@ function blackCard(dort, value, color) {
     });
 }
 
-function darfPlus4Legen(kartenArray, colorAblage) {
+function darfPlus4Legen(kartenArray, colorAblage, valueAblage) {
     let darfLegen = true;
-    for (let i = 0; i < kartenArray.length; i++) {
-        let cardinfo = kartenArray[i].getAttribute('src');
-        let colorCard = cardinfo[0];
-        if (colorAblage === colorCard) {
-            darfLegen = false;
+    if (valueAblage === '14') {
+        darfLegen = true;
+    } else {
+        for (let i = 0; i < kartenArray.length; i++) {
+            let cardinfo = kartenArray[i].getAttribute('src');
+            let colorCard = cardinfo[0];
+            if (colorAblage === colorCard) {
+                darfLegen = false;
+            }
         }
     }
     return darfLegen;
@@ -287,7 +302,7 @@ function getKartenWerte(topKarte) {
     let arrtemp = valueArray[valueArray.length - 6];
     let color;
     let value;
-    if (arrtemp === 1) {
+    if (arrtemp == 1) {
         let sliceArray = valueArray.slice(-6, -4);
         value = `${sliceArray[0]}${sliceArray[1]}`;
     } else {
@@ -328,21 +343,19 @@ async function karteAblegen(value, color, wildColor) {
             console.log("Du bis nicht dran!");
             aktiverSpieler = aktiverSpieler;
         } else if (responseInfo.error === 'Draw4NotAllowed') {
+            alert("Diese Karte darfst du noch nicht spielen!");
             console.log("Draw4NotAllowed");
             aktiverSpieler = aktiverSpieler;
         } else {
-            if (unoRufen(aktiverSpieler) === true) {
-                alert("UNO UNO UNO");
-            }
             if (value === '13' || value === '14') {
                 document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${value}.png`);
             } else {
                 document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
             }
-            gewinner(aktiverSpieler);
             let spielkarte = document.getElementById('gespielteKarte');
             spielkarte.classList.add('swirl-out-bck');
             removeTimeout(spielkarte);
+            gewinner(aktiverSpieler);
             beginNextPlayer(responseInfo); // value für Abfrage +2/+4
             console.log("alter spieler ist: " + aktiverSpieler);
         }
@@ -357,6 +370,7 @@ function removeTimeout(element) {
 
 function beginNextPlayer(response) {// value für Abfrage +2/+4
     playerListe.forEach(element => getCardsOf(element));
+
 
     setTimeout(function () {
         aktiverSpieler = response.Player;
@@ -373,24 +387,16 @@ function beginNextPlayer(response) {// value für Abfrage +2/+4
 function unoRufen(aktiverSpieler) {
     let unoGerufen = false;
     let aP = document.getElementById(aktiverSpieler);
-    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
+    if (aP.hasChildNodes() == true && aP.childNodes.length == 2) {
         if (unoGerufen != true) {
-            let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufenModal'));
-            unoRufenModal.show();
-
-            document.getElementById('unoYes').addEventListener('submit', function (evt) {
-                unoGerufen = true;
-                evt.preventDefault();
-                unoRufenModal.hide();
-                return unoGerufen;
-            });
+            alert("uno uno uno!");
         }
     }
 }
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
-    //if (aP.hasChildNodes() === false) {   // ---------------------------------------- testen -----------------------------------------
+    if (aP.hasChildNodes() == true && aP.childNodes.length == 1){ //aP.hasChildNodes() == false) {
         alert("Du hast gewonnen!!!");
         let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
         myModalEnde.show();
@@ -399,7 +405,7 @@ function gewinner(aktiverSpieler) {
             myModalEnde.hide();
         })
         exit = true;
-    //}  // --------------------------------------------------------------------------- testen ----------------------------------------------
+    }
 }
 
 // Karte ziehen
@@ -461,4 +467,13 @@ console.log('this first')
 // the '()' is when you are telling your code to execute the function reference else it will just log the reference
 callback()
 }
+
+ let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufenModal'));
+            unoRufenModal.show();
+
+            document.getElementById('unoYes').addEventListener('submit', function (evt) {
+                unoGerufen = true;
+                evt.preventDefault();
+                unoRufenModal.hide();
+            });
 */

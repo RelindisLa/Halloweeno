@@ -1148,12 +1148,7 @@ Hier ist der Code für die Player
 
 
 /*--------- Video */
-#headerPopup{
-  width:75%;
-  margin:0 auto;
-}
-
-#headerPopup iframe{
+#winnerVideo{
   width:100%;
   margin:0 auto;
 }
