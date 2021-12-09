@@ -393,9 +393,12 @@ function gewinner(aktiverSpieler) {
     //if (aP.hasChildNodes() === false) {   // ---------------------------------------- testen -----------------------------------------
         alert("Du hast gewonnen!!!");
         let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
-        //document.getElementById('winnerVideo').addEventListener('submit', function (evt) {
         myModalEnde.show();
-        //exit = true;
+        document.getElementById('endYes').addEventListener('submit', function (evt) {
+            evt.preventDefault();
+            myModalEnde.hide();
+        })
+        exit = true;
     //}  // --------------------------------------------------------------------------- testen ----------------------------------------------
 }
 

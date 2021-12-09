@@ -63,7 +63,7 @@
 
                     <source src="assets/sound/GewitterDumpf.mp3" type="audio/mpeg">
                 </audio>
-                
+
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav nav-dropdown nav-right" data-app-modern-menu="true">
                         <li class="nav-item"><a class="nav-link link text-white text-primary display-4"
@@ -85,7 +85,7 @@
 
     <section data-bs-version="5.1" class="content4 cid-sMsQhsvwE2" id="halloweenoSpiel">
         <div class="container-fluid" id="spielfeld">
-            <div class="row justify-items-inline" >
+            <div class="row justify-items-inline">
                 <div class="col-md-4 col-lg-5" id="spielerkarten1u2">
                     <div style="padding: 30px; height: 400px;" id="playerName1">
                     </div>
@@ -121,7 +121,7 @@
     <script src="assets/smoothscroll/smooth-scroll.js"></script>
     <script src="assets/ytplayer/index.js"></script>
     <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-   
+
     <input name="animation" type="hidden">
 
     <div class="modal fade" id="playerNames" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
@@ -134,7 +134,7 @@
                     <div class="modal-body">
                         <div class="m-3 row">
                             <input type="text" class="form-control" id="playerName1input"
-                                placeholder="Name für Spieler*in 1 eingeben">        </input>
+                                placeholder="Name für Spieler*in 1 eingeben"> </input>
                         </div>
 
                         <div class="m-3 row">
@@ -169,16 +169,20 @@
                     </div>
                     <div class="modal-body">
                         <div>
-                            <button type="submit" class="btn btn-primary" id="chooseRed" style="background-color: crimson;">Rot</button>
+                            <button type="submit" class="btn btn-primary" id="chooseRed"
+                                style="background-color: crimson;">Rot</button>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary" id="chooseYellow" style="background-color: yellow;">Gelb</button>
+                            <button type="submit" class="btn btn-primary" id="chooseYellow"
+                                style="background-color: yellow;">Gelb</button>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary" id="chooseGreen" style="background-color: green;">Grün</button>
+                            <button type="submit" class="btn btn-primary" id="chooseGreen"
+                                style="background-color: green;">Grün</button>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary" id="chooseBlue" style="background-color: blue;">Blau</button>
+                            <button type="submit" class="btn btn-primary" id="chooseBlue"
+                                style="background-color: blue;">Blau</button>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -209,10 +213,29 @@
         </form>
     </div>
 
-    <div class="modal fade" id="winnerVideo" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
-        <iframe width="840" height="470" src="https://www.youtube.com/embed/6cx1WaoWQ34?start=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+    <div class="modal" id="winnerVideo" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+        <form id="winnerVideoForm">
+        <div class="modal-dialog modal-dialog-centered" width="1708">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Du hast gewonnen!</h5>
+                </div>
+                <div class="modal-body">
+                    
+                    <div id="headerPopup" class="mfp-hide embed-responsive embed-responsive-21by9">
+                        <iframe class="embed-responsive-item" width="1708" height="960"
+                            src="https://www.youtube.com/embed/6cx1WaoWQ34?start=1" title="YouTube video player"
+                            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
-        </iframe>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary" id="endYes">Beenden</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </form>
     </div>
 
     <script src="assets/theme/js/game.js"></script>
