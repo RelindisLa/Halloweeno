@@ -11,6 +11,7 @@ const audioPlus4 = new Audio('assets/sound/mixkit-little-devil-laughing-413.wav'
 const audioCardflick = new Audio('assets/sound/mixkit-twig-breaking-2945.wav');
 
 
+//hier beginnt das Spiel mit der Abfrage der Namen:
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
 //myModal.show();  -------------------------------------------------------------------------------------------------> NamesModal!!!
 startGame(printGameInfo); //   --------------------------------------------------------------------> wird nicht gebraucht beim Modal!!!!
@@ -135,6 +136,7 @@ function erstelltAblage(card) {
     ablageStapel = document.getElementById("ablagestapel");
     ablageBild = document.createElement("img");
     ablageBild.setAttribute("style", "text-align: center; height: 100px;");
+    ablageBild.setAttribute("id", "ablage123");
     ablageBild.setAttribute("class", "ablage123");
     ablageCard = `${card.Color}${card.Value}`;
     ablageBild.src = `${baseUrl}${ablageCard}.png`;
@@ -170,9 +172,6 @@ function focusAktivPlayer(aktiverSpieler) {
 }
 
 function playCard() {
-
-    //gewinner(aktiverSpieler);
-
     //Spiellogik - > nur gültige Karten spielen:
     //Ablage holen zum Vergleichen
     let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
@@ -347,30 +346,45 @@ async function karteAblegen(value, color, wildColor) {
             console.log("Draw4NotAllowed");
             aktiverSpieler = aktiverSpieler;
         } else {
+            let spielkarte = document.getElementById('gespielteKarte');
+            slideCard(spielkarte);
+            setTimeout(function(){
             if (value === '13' || value === '14') {
                 document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${value}.png`);
             } else {
                 document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
-            }
-            let spielkarte = document.getElementById('gespielteKarte');
-            spielkarte.classList.add('swirl-out-bck');
+            }},1000);
             removeTimeout(spielkarte);
             gewinner(aktiverSpieler);
-            beginNextPlayer(responseInfo); // value für Abfrage +2/+4
+            setTimeout(function () { beginNextPlayer(responseInfo) }, 1000); // value für Abfrage +2/+4
             console.log("alter spieler ist: " + aktiverSpieler);
         }
     }
 }
 
+function slideCard(spielkarte) {
+    spielkarte.classList.remove('vibrate-1');
+    spielkarte.classList.add('swirl-out-back');
+    let ausgespielteSpielkarte = document.getElementById('gespielteKarte');
+    // rect is a DOMRect object 
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+    let rectVon = ausgespielteSpielkarte.getBoundingClientRect();
+    let rectZu = document.getElementById("ablage123").getBoundingClientRect();
+
+    // css transform braucht die pixel entfernung im viewport aber relativ vom transformierenden object
+    document.querySelector(':root').style.setProperty('--ablage-x', (rectZu.x - rectVon.x) + "px");
+    document.querySelector(':root').style.setProperty('--ablage-y', (rectZu.y - rectVon.y) + "px");
+    ausgespielteSpielkarte.classList.add('karte-auf-ablage');
+}
+
 function removeTimeout(element) {
     setTimeout(function () {
         element.remove();
-    }, 800);
+    }, 900);
 }
 
 function beginNextPlayer(response) {// value für Abfrage +2/+4
     playerListe.forEach(element => getCardsOf(element));
-
 
     setTimeout(function () {
         aktiverSpieler = response.Player;
@@ -396,7 +410,7 @@ function unoRufen(aktiverSpieler) {
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
-    if (aP.hasChildNodes() == true && aP.childNodes.length == 1){ //aP.hasChildNodes() == false) {
+    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) { //aP.hasChildNodes() == false) {
         alert("Du hast gewonnen!!!");
         let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
         myModalEnde.show();
@@ -437,6 +451,8 @@ function addCard(el) {
     wo.appendChild(div);
     div.appendChild(img);
 }
+
+//Karten eines Spielers abrufen
 async function getCardsOf(player) {
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
         method: 'GET',
@@ -448,6 +464,7 @@ async function getCardsOf(player) {
         erstesKartenErstellen(infoPlayerAbfrage);
     }
 }
+
 
 /*
 // Execute the function "doThis" with another function as parameter, in this case "andThenThis".

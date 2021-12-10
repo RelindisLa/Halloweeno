@@ -19,7 +19,9 @@
     <link rel="stylesheet" href="assets/animatecss/animate.css">
     <link rel="stylesheet" href="assets/dropdown/css/style.css">
     <link rel="stylesheet" href="assets/socicon/css/styles.css">
+    <link rel="stylesheet" href="assets/theme/css/mystyle.css">
     <link rel="stylesheet" href="assets/theme/css/style.css">
+   
     <link rel="preload"
         href="https://fonts.googleapis.com/css?family=Jost:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"
         as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -119,7 +121,6 @@
     <script src="assets/theme/js/music.js"></script>
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/smoothscroll/smooth-scroll.js"></script>
-    <script src="assets/ytplayer/index.js"></script>
     <script src="assets/dropdown/js/navbar-dropdown.js"></script>
 
     <input name="animation" type="hidden">
@@ -214,19 +215,13 @@
     </div>
 
     <div class="modal" id="winnerVideo" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
-        <form id="winnerVideoForm" style="width: 100%">
-        <div class="modal-dialog modal-dialog-centered" text-align="center">
-            <div class="modal-content" width="unset">
-                <div class="modal-header">
-                    <h5 class="modal-title">Du hast gewonnen!</h5>
-                </div>
+        <div class="modal-dialog modal-dialog-centered fullscreen">
+            <div class="modal-content" >
                 <div class="modal-body">
-                    
                     <div id="headerPopup" class="mfp-hide embed-responsive embed-responsive-21by9">
-                        <iframe class="embed-responsive-item" width="854" height="475"
+                        <iframe class="embed-responsive-item" width="900" height="480"
                             src="https://www.youtube.com/embed/6cx1WaoWQ34?start=1" title="YouTube video player"
                             frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
                     </div>
                     <div>
                         <button type="submit" class="btn btn-primary" id="endYes">Beenden</button>
@@ -234,8 +229,6 @@
                 </div>
             </div>
         </div>
-
-        </form>
     </div>
 
     <script src="assets/theme/js/game.js"></script>
