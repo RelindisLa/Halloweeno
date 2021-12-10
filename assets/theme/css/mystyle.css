@@ -169,7 +169,33 @@ canvas {
     }
 }
 
-/*--------- Video */
+/*----------------------------------------------
+Modal optik
+-----------------------------------------------*/
+.modal-body{
+    background-color: #07171c;
+    color: rgb(224, 223, 223);
+}
+
+#colorsToChoose .modal-body {
+    display: inline-flex;
+}
+#chooseRed btn{
+    background-color: crimson;
+}
+#chooseYellow btn{
+    background-color: yellow;
+}
+#chooseGreen btn{
+    background-color: green;
+}
+#chooseBlue btn{
+    background-color: blue;
+}
+
+/*----------------------------------------------
+Video
+-----------------------------------------------*/
 #winnerVideo {
     text-align: center;
     width: unset;
@@ -180,12 +206,24 @@ canvas {
     position: fixed;
     margin: 0;
     width: 100%;
-    height: fit-content;
     padding: 0;
 }
 
-.fullscreen {
+#winnerVideo .modal-dialog.modal-dialog-centered.fullscreen {
+    min-width: 100%;
+    min-height: 100%;
+}
+
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+  }
+  .videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    padding: 0;
-}
+  }
+

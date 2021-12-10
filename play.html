@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="assets/socicon/css/styles.css">
     <link rel="stylesheet" href="assets/theme/css/mystyle.css">
     <link rel="stylesheet" href="assets/theme/css/style.css">
-   
+
     <link rel="preload"
         href="https://fonts.googleapis.com/css?family=Jost:100,200,300,400,500,600,700,800,900,100i,200i,300i,400i,500i,600i,700i,800i,900i&display=swap"
         as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -170,8 +170,7 @@
                     </div>
                     <div class="modal-body">
                         <div>
-                            <button type="submit" class="btn btn-primary" id="chooseRed"
-                                style="background-color: crimson;">Rot</button>
+                            <button type="submit" class="btn btn-primary" id="chooseRed">Rot</button>
                         </div>
                         <div>
                             <button type="submit" class="btn btn-primary" id="chooseYellow"
@@ -194,41 +193,25 @@
         </form>
     </div>
 
-    <div class="modal fade" id="unoRufenModal" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
-        <form id="unoButtons">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Willst du Uno rufen?</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <button type="submit" class="btn btn-primary" id="unoYes">Ja</button>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-primary" id="unoNo" disabled>Nein</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
     <div class="modal" id="winnerVideo" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered fullscreen">
-            <div class="modal-content" >
-                <div class="modal-body">
-                    <div id="headerPopup" class="mfp-hide embed-responsive embed-responsive-21by9">
-                        <iframe class="embed-responsive-item" width="900" height="480"
-                            src="https://www.youtube.com/embed/6cx1WaoWQ34?start=1" title="YouTube video player"
-                            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary" id="endYes">Beenden</button>
+
+            <div class="modal-dialog modal-dialog-centered fullscreen">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="videoWrapper">
+                            <iframe class="embed-responsive-item"
+                                src="https://www.youtube.com/embed/6cx1WaoWQ34?start=1" title="YouTube video player"
+                                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+                        <div>
+                            <form class="" style="">
+                            <button type="submit" class="btn btn-primary mx-auto " id="endYes" >Beenden</button>
+                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
     </div>
 
     <script src="assets/theme/js/game.js"></script>

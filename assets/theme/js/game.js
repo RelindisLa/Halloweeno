@@ -172,6 +172,9 @@ function focusAktivPlayer(aktiverSpieler) {
 }
 
 function playCard() {
+
+    //gewinner(aktiverSpieler);
+
     //Spiellogik - > nur gültige Karten spielen:
     //Ablage holen zum Vergleichen
     let ablageKarte = document.getElementsByClassName('ablage123')[0].getAttribute('src');
@@ -276,6 +279,8 @@ function darfPlus4Legen(kartenArray, colorAblage, valueAblage) {
     let darfLegen = true;
     if (valueAblage === '14') {
         darfLegen = true;
+    } else if(valueAblage ==='13'){
+        darfLegen = false;
     } else {
         for (let i = 0; i < kartenArray.length; i++) {
             let cardinfo = kartenArray[i].getAttribute('src');
@@ -337,28 +342,32 @@ async function karteAblegen(value, color, wildColor) {
         console.log("responseInfo " + JSON.stringify(responseInfo));
         if (responseInfo.error === 'WrongColor') {
             console.log("Diese Karte hat die falsche Farbe!");
-            aktiverSpieler = aktiverSpieler;
+            //aktiverSpieler = aktiverSpieler;
         } else if (responseInfo.error === 'IncorrectPlayer') {
             console.log("Du bis nicht dran!");
-            aktiverSpieler = aktiverSpieler;
+            //aktiverSpieler = aktiverSpieler;
         } else if (responseInfo.error === 'Draw4NotAllowed') {
             alert("Diese Karte darfst du noch nicht spielen!");
             console.log("Draw4NotAllowed");
-            aktiverSpieler = aktiverSpieler;
+            //aktiverSpieler = aktiverSpieler;
         } else {
             let spielkarte = document.getElementById('gespielteKarte');
             slideCard(spielkarte);
-            setTimeout(function(){
-            if (value === '13' || value === '14') {
-                document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${value}.png`);
-            } else {
-                document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
-            }},1000);
+            setTimeout(function () {
+                if (value === '13' || value === '14') {
+                    document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${value}.png`);
+                } else {
+                    document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
+                }
+            }, 1000);
             removeTimeout(spielkarte);
             gewinner(aktiverSpieler);
             setTimeout(function () { beginNextPlayer(responseInfo) }, 1000); // value für Abfrage +2/+4
             console.log("alter spieler ist: " + aktiverSpieler);
         }
+    } else if (!response.ok) { // falls servererror -> neues Spiel beginnt
+        alert("Das Server-Gerippe klappert. Ein neues Spiel beginnt!");
+        myModal.show();
     }
 }
 
@@ -411,14 +420,14 @@ function unoRufen(aktiverSpieler) {
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
     if (aP.hasChildNodes() == true && aP.childNodes.length == 1) { //aP.hasChildNodes() == false) {
-        alert("Du hast gewonnen!!!");
-        let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
-        myModalEnde.show();
-        document.getElementById('endYes').addEventListener('submit', function (evt) {
-            evt.preventDefault();
-            myModalEnde.hide();
-        })
-        exit = true;
+    alert("Du hast gewonnen!!!");
+    let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
+    myModalEnde.show();
+    document.getElementById('endYes').addEventListener('submit', function (evt) {
+        //evt.preventDefault();
+        myModalEnde.hide();
+    })
+    exit = true;
     }
 }
 
@@ -484,13 +493,4 @@ console.log('this first')
 // the '()' is when you are telling your code to execute the function reference else it will just log the reference
 callback()
 }
-
- let unoRufenModal = new bootstrap.Modal(document.getElementById('unoRufenModal'));
-            unoRufenModal.show();
-
-            document.getElementById('unoYes').addEventListener('submit', function (evt) {
-                unoGerufen = true;
-                evt.preventDefault();
-                unoRufenModal.hide();
-            });
 */
