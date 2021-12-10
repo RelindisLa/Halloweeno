@@ -173,24 +173,38 @@ canvas {
 Modal optik
 -----------------------------------------------*/
 .modal-body{
-    background-color: #07171c;
+    background-color: #10323d;
+}
+
+.modal-content{
+    background-color: #0f2e38;
     color: rgb(224, 223, 223);
+    font-weight: bold;
+}
+
+.modal-header{
+    border: black;
 }
 
 #colorsToChoose .modal-body {
     display: inline-flex;
 }
-#chooseRed btn{
-    background-color: crimson;
+
+#chooseRed button{
+    background-color: red !important;
 }
-#chooseYellow btn{
-    background-color: yellow;
+#chooseYellow button{
+    background-color: yellow !important;
 }
-#chooseGreen btn{
-    background-color: green;
+#chooseGreen button{
+    background-color: green !important;
 }
-#chooseBlue btn{
-    background-color: blue;
+#chooseBlue button{
+    background-color: blue !important;
+}
+
+#winnerVideo button{
+    margin-top: 30px;
 }
 
 /*----------------------------------------------

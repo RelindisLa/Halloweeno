@@ -359,10 +359,10 @@ async function karteAblegen(value, color, wildColor) {
                 } else {
                     document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
                 }
-            }, 1000);
+            }, 800);
             removeTimeout(spielkarte);
             gewinner(aktiverSpieler);
-            setTimeout(function () { beginNextPlayer(responseInfo) }, 1000); // value für Abfrage +2/+4
+            setTimeout(function () { beginNextPlayer(responseInfo) }, 800); // value für Abfrage +2/+4
             console.log("alter spieler ist: " + aktiverSpieler);
         }
     } else if (!response.ok) { // falls servererror -> neues Spiel beginnt
@@ -389,7 +389,7 @@ function slideCard(spielkarte) {
 function removeTimeout(element) {
     setTimeout(function () {
         element.remove();
-    }, 900);
+    }, 700);
 }
 
 function beginNextPlayer(response) {// value für Abfrage +2/+4
