@@ -209,6 +209,7 @@ Modal optik
 Video
 -----------------------------------------------*/
 #winnerVideo {
+    justify-content: center;
     text-align: center;
     width: unset;
     margin: 0 auto;
@@ -217,8 +218,7 @@ Video
 #winnerVideo .modal-dialog {
     position: fixed;
     margin: 0;
-    width: 100%;
-    padding: 0;
+    padding: 0px;
 }
 
 #winnerVideo .modal-dialog.modal-dialog-centered.fullscreen {

@@ -6,7 +6,6 @@ let ablageCard;
 let ablageStapel;
 let ablageBild;
 let isPlayed = false;
-let exit = false;
 const audioColor = new Audio('assets/sound/mixkit-cartoon-throat-laugh-745.wav');
 const audioPlus4 = new Audio('assets/sound/mixkit-little-devil-laughing-413.wav');
 const audioCardflick = new Audio('assets/sound/mixkit-twig-breaking-2945.wav');
@@ -14,8 +13,8 @@ const audioCardflick = new Audio('assets/sound/mixkit-twig-breaking-2945.wav');
 
 //hier beginnt das Spiel mit der Abfrage der Namen:
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
-//myModal.show();  -------------------------------------------------------------------------------------------------> NamesModal!!!
-startGame(printGameInfo); //   --------------------------------------------------------------------> wird nicht gebraucht beim Modal!!!!
+myModal.show();  //-------------------------------------------------------------------------------------------------> NamesModal!!!
+//startGame(printGameInfo); //   --------------------------------------------------------------------> wird nicht gebraucht beim Modal!!!!
 
 document.getElementById('playerNamesForm').addEventListener('keyup', function (evt) {
     //Namensunterscheidung
@@ -23,7 +22,7 @@ document.getElementById('playerNamesForm').addEventListener('keyup', function (e
     let player2 = document.getElementById('playerName2input').value.toUpperCase();
     let player3 = document.getElementById('playerName3input').value.toUpperCase();
     let player4 = document.getElementById('playerName4input').value.toUpperCase();
-    //playerListe = [player1, player2, player3, player4];  --------------------------------------------------------> NamesModal!!!
+    playerListe = [player1, player2, player3, player4]; // --------------------------------------------------------> NamesModal!!!
 
     if (player1 === "" || player2 === "" || player3 === "" || player4 === "") {
         document.getElementById('playerNamesSubmit').disabled = true;
@@ -45,7 +44,7 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
 });
 
 async function startGame(callback) {
-    playerListe = ["a", "b", "c", "d"]; //  ------------------->--------------------------------->  wird nicht gebraucht beim Modal!!!!
+    //playerListe = ["a", "b", "c", "d"]; //  ------------------->--------------------------------->  wird nicht gebraucht beim Modal!!!!
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
         body: JSON.stringify(
@@ -117,7 +116,6 @@ function erstesKartenErstellen(element) {
 
 function spielerKartenErstellen(element) {
     let divA = document.getElementById(element.Player);
-    console.log("divA imSpielerKartenErstellen: " + divA);
 
     element.Cards.forEach(el => {
         const div = document.createElement("div");
@@ -177,7 +175,7 @@ function playCard() {
         return false;
     }
 
-    //gewinner(aktiverSpieler);
+    gewinner(aktiverSpieler);
 
     //Spiellogik - > nur gültige Karten spielen:
     //Ablage holen zum Vergleichen
@@ -196,7 +194,6 @@ function playCard() {
         });
 
         kartenArray[i].addEventListener("click", function () {
-            this.classList.add('vibrate-1');
             let wasAuchImmer = this.getAttribute('src')
             let werteClickKarte = getKartenWerte(wasAuchImmer);
             let colorClick = werteClickKarte[0];
@@ -237,11 +234,11 @@ function playCard() {
                         audioCardflick.play();
                         blackCard(this, valueClick, colorClick);
                     } else {
-                        alert("Diese Karte darfst du nur spielen, wenn du weder passende Farbe noch Wert legen kannst!");
+                        this.classList.add('shake');
+                        //alert("Diese Karte darfst du nicht spielen");
                     }
                 }
             } else {
-                this.classList.remove('vibrate-1');
                 this.classList.add('shake');
                 shakeTimeout(this);
             }
@@ -287,9 +284,9 @@ function blackCard(dort, value, color) {
 function darfPlus4Legen(kartenArray, colorAblage, valueAblage) {
     let darfLegen = true;
     if (valueAblage === '14') {
-        darfLegen = true;
-    } else if (valueAblage === '13') {
         darfLegen = false;
+    } else if (valueAblage === '13') {
+        darfLegen = true;
     } else {
         for (let i = 0; i < kartenArray.length; i++) {
             let cardinfo = kartenArray[i].getAttribute('src');
@@ -306,7 +303,7 @@ function shakeTimeout(element) {
     setTimeout(function () {
         element.classList.remove('shake');
         element.offsetWidth = element.offsetWidth;
-    }, 1000);
+    }, 800);
 }
 
 function vibrateTimeout(element) {
@@ -357,17 +354,14 @@ async function karteAblegen(value, color, wildColor) {
     let responseInfo;
     if (response.ok) {
         responseInfo = await response.json();
-        console.log("responseInfo " + JSON.stringify(responseInfo));
+        //console.log("responseInfo " + JSON.stringify(responseInfo));
         if (responseInfo.error === 'WrongColor') {
-            console.log("Diese Karte hat die falsche Farbe!");
-            //aktiverSpieler = aktiverSpieler;
+            console.log("Wrong Color");
         } else if (responseInfo.error === 'IncorrectPlayer') {
-            console.log("Du bis nicht dran!");
-            //aktiverSpieler = aktiverSpieler;
+            console.log("Incorrect Player");
         } else if (responseInfo.error === 'Draw4NotAllowed') {
             alert("Diese Karte darfst du noch nicht spielen!");
             console.log("Draw4NotAllowed");
-            //aktiverSpieler = aktiverSpieler;
         } else {
             let spielkarte = document.getElementById('gespielteKarte');
             slideCard(spielkarte);
@@ -448,7 +442,6 @@ function gewinner(aktiverSpieler) {
             //evt.preventDefault();
             myModalEnde.hide();
         });
-        exit = true;
     }
 }
 
@@ -460,9 +453,8 @@ async function drawCard() {
     });
     let newCard;
     if (response.ok) {
-        newCard = await response.json(); // response Body auslesen
+        newCard = await response.json();
         //console.log("neue Karte: " + JSON.stringify(newCard));
-        console.log(newCard);
         addCard(newCard.Card);
         aktiverSpieler = newCard.NextPlayer;
         focusAktivPlayer(aktiverSpieler);
@@ -491,8 +483,8 @@ async function getCardsOf(player) {
     });
     let infoPlayerAbfrage;
     if (response.ok) {
-        infoPlayerAbfrage = await response.json(); // response Body auslesen
-        console.log("abfrage Kards of: " + player + " hat Karten: " + JSON.stringify(infoPlayerAbfrage));
+        infoPlayerAbfrage = await response.json();
+        console.log("abfrage Cards of: " + player ); //+ " hat Karten: " + JSON.stringify(infoPlayerAbfrage)
         erstesKartenErstellen(infoPlayerAbfrage);
     }
 }
