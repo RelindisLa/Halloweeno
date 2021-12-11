@@ -2,7 +2,7 @@ function init() {
   document.getElementById('sound_button').addEventListener('click',changeHTMLContent);
 }
   
-// onClick="changeHTMLContent()"
+onClick="changeHTMLContent()"
 
 function changeHTMLContent() {
   let snd = document.getElementById("sound"); 

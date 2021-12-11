@@ -123,7 +123,7 @@ function spielerKartenErstellen(element) {
         const img = document.createElement("img");
         const card = `${el.Color}${el.Value}`;
         img.src = `${baseUrl}${card}.png`;
-        img.setAttribute("class", `karte-${element.Player}`); //rounded d-block ??
+        img.setAttribute("class", `karte-${element.Player}`);
         img.setAttribute("style", "height: 80px; padding: 10px");
         div.appendChild(img);
         divA.appendChild(div);
@@ -174,8 +174,6 @@ function playCard() {
     if (isPlayed == true) {
         return false;
     }
-
-    gewinner(aktiverSpieler);
 
     //Spiellogik - > nur gültige Karten spielen:
     //Ablage holen zum Vergleichen
@@ -469,7 +467,6 @@ function addCard(el) {
     const img = document.createElement("img");
     const card = `${el.Color}${el.Value}`;
     img.src = `${baseUrl}${card}.png`;
-    img.setAttribute("class", "rounded d-block");
     img.setAttribute("style", "height: 80px; padding: 10px");
     wo.appendChild(div);
     div.appendChild(img);
