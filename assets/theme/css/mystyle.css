@@ -17,20 +17,16 @@ canvas {
   -----------------------------------------------------------------------------------------------*/
 
 #sound_bar {
-    margin-left: 40px;
+    margin-left: 120px;
 }
 
 .navbar.navbar-dropdown.navbar-fixed-top.navbar-expand-lg {
     background-color: #10323d;
 }
+
 .navbar-nav.nav-dropdown.nav-right {
     background-color: #10323d;
 }
-
-.navbar-toggler{
-    color: white;
-}
-
 
 /* ----------------------------------------------------------------------------------------------
   Hier ist der Code für die Player
@@ -85,7 +81,6 @@ canvas {
     }
 }
 
-
 /* ----------------------------------------------
     drehen der gespielten Karte
       * ---------------------------------------------- */
@@ -106,11 +101,12 @@ canvas {
 }
 
 /*----------------------------------------------------------------------------------------------
-  Hier ist der Code für wandernde Spielkarte
-  -----------------------------------------------------------------------------------------------
-  CSS Variable
-  https://www.w3schools.com/css/css3_variables_javascript.asp
-  */
+Hier ist der Code für wandernde Spielkarte
+-----------------------------------------------------------------------------------------------
+CSS Variable
+https://www.w3schools.com/css/css3_variables_javascript.asp
+https://www.w3schools.com/css/tryit.asp?filename=trycss3_transform_translate
+*/
 :root {
     --ablage-x: 0px;
     --ablage-y: 0px;
@@ -121,7 +117,6 @@ canvas {
     transform-origin: 0%, 0%;
 }
 
-/*https://www.w3schools.com/css/tryit.asp?filename=trycss3_transform_translate*/
 @keyframes karte-auf-ablage {
     0% {}
 
@@ -183,17 +178,17 @@ canvas {
 /*----------------------------------------------
 Modal optik
 -----------------------------------------------*/
-.modal-body{
+.modal-body {
     background-color: #10323d;
 }
 
-.modal-content{
+.modal-content {
     background-color: #0f2e38;
     color: rgb(224, 223, 223);
     font-weight: bold;
 }
 
-.modal-header{
+.modal-header {
     border: black;
 }
 
@@ -201,7 +196,7 @@ Modal optik
     display: inline-flex;
 }
 
-#winnerVideo button{
+#winnerVideo button {
     margin-top: 30px;
 }
 
@@ -226,7 +221,7 @@ Video
     min-height: 100%;
 }
 
-#winnerVideo h2{
+#winnerVideo h2 {
     text-align: center;
     text-shadow: whitesmoke;
     padding-top: 30px;
@@ -234,14 +229,14 @@ Video
 
 .videoWrapper {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 */
+    padding-bottom: 56.25%;  /* 16:9 */
     height: 0;
-  }
-  .videoWrapper iframe {
+}
+
+.videoWrapper iframe {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-  }
-
+}
