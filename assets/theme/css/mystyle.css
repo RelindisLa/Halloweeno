@@ -20,6 +20,17 @@ canvas {
     margin-left: 40px;
 }
 
+.navbar.navbar-dropdown.navbar-fixed-top.navbar-expand-lg {
+    background-color: #10323d;
+}
+.navbar-nav.nav-dropdown.nav-right {
+    background-color: #10323d;
+}
+
+.navbar-toggler{
+    color: white;
+}
+
 
 /* ----------------------------------------------------------------------------------------------
   Hier ist der Code für die Player
@@ -149,19 +160,19 @@ canvas {
     }
 
     20% {
-        transform: translate(-2px, 2px);
+        transform: translate(-1px, 1px);
     }
 
     40% {
-        transform: translate(-2px, -2px);
+        transform: translate(-1px, -1px);
     }
 
     60% {
-        transform: translate(2px, 2px);
+        transform: translate(1px, 1px);
     }
 
     80% {
-        transform: translate(2px, -2px);
+        transform: translate(1px, -1px);
     }
 
     100% {
@@ -190,19 +201,6 @@ Modal optik
     display: inline-flex;
 }
 
-#chooseRed button{
-    background-color: red !important;
-}
-#chooseYellow button{
-    background-color: yellow !important;
-}
-#chooseGreen button{
-    background-color: green !important;
-}
-#chooseBlue button{
-    background-color: blue !important;
-}
-
 #winnerVideo button{
     margin-top: 30px;
 }
@@ -226,6 +224,12 @@ Video
 #winnerVideo .modal-dialog.modal-dialog-centered.fullscreen {
     min-width: 100%;
     min-height: 100%;
+}
+
+#winnerVideo h2{
+    text-align: center;
+    text-shadow: whitesmoke;
+    padding-top: 30px;
 }
 
 .videoWrapper {

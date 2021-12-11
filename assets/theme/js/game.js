@@ -5,6 +5,7 @@ let spielID;
 let ablageCard;
 let ablageStapel;
 let ablageBild;
+let isPlayed = false;
 let exit = false;
 const audioColor = new Audio('assets/sound/mixkit-cartoon-throat-laugh-745.wav');
 const audioPlus4 = new Audio('assets/sound/mixkit-little-devil-laughing-413.wav');
@@ -172,6 +173,9 @@ function focusAktivPlayer(aktiverSpieler) {
 }
 
 function playCard() {
+    if (isPlayed == true) {
+        return false;
+    }
 
     //gewinner(aktiverSpieler);
 
@@ -186,6 +190,11 @@ function playCard() {
     //alle Karten mit eventListener versehen und prüfen
     let kartenArray = document.getElementsByClassName(`karte-${aktiverSpieler}`);
     for (let i = 0; i < kartenArray.length; i++) {
+        kartenArray[i].addEventListener("mouseover", function () {
+            this.classList.add('vibrate-1');
+            vibrateTimeout(this);
+        });
+
         kartenArray[i].addEventListener("click", function () {
             this.classList.add('vibrate-1');
             let wasAuchImmer = this.getAttribute('src')
@@ -279,7 +288,7 @@ function darfPlus4Legen(kartenArray, colorAblage, valueAblage) {
     let darfLegen = true;
     if (valueAblage === '14') {
         darfLegen = true;
-    } else if(valueAblage ==='13'){
+    } else if (valueAblage === '13') {
         darfLegen = false;
     } else {
         for (let i = 0; i < kartenArray.length; i++) {
@@ -298,6 +307,13 @@ function shakeTimeout(element) {
         element.classList.remove('shake');
         element.offsetWidth = element.offsetWidth;
     }, 1000);
+}
+
+function vibrateTimeout(element) {
+    setTimeout(function () {
+        element.classList.remove('vibrate-1');
+        element.offsetWidth = element.offsetWidth;
+    }, 300);
 }
 
 function getKartenWerte(topKarte) {
@@ -332,9 +348,11 @@ function getKartenWerte(topKarte) {
 }
 
 async function karteAblegen(value, color, wildColor) {
+    isPlayed = true;
     console.log("gespielt wird: " + `${value}${color}${wildColor}`)
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/playCard/${spielID}?value=${value}&color=${color}&wildColor=${wildColor}`, {
         method: 'PUT',
+        cache: 'no-store',
     });
     let responseInfo;
     if (response.ok) {
@@ -365,9 +383,9 @@ async function karteAblegen(value, color, wildColor) {
             setTimeout(function () { beginNextPlayer(responseInfo) }, 800); // value für Abfrage +2/+4
             console.log("alter spieler ist: " + aktiverSpieler);
         }
-    } else if (!response.ok) { // falls servererror -> neues Spiel beginnt
-        alert("Das Server-Gerippe klappert. Ein neues Spiel beginnt!");
-        myModal.show();
+    } else if (!response.ok) { // falls servererror -> Info, eventuell weiterspielen möglich
+        alert("Das Server-Gerippe klappert. Es ächzt und stöhnt und pfeift ein letztes Mal, dann legt es sich zur Ruh'");
+
     }
 }
 
@@ -405,29 +423,32 @@ function beginNextPlayer(response) {// value für Abfrage +2/+4
 
         focusAktivPlayer(aktiverSpieler);
     }, 1000);
+    isPlayed = false;
 }
 
 function unoRufen(aktiverSpieler) {
-    let unoGerufen = false;
     let aP = document.getElementById(aktiverSpieler);
     if (aP.hasChildNodes() == true && aP.childNodes.length == 2) {
-        if (unoGerufen != true) {
-            alert("uno uno uno!");
-        }
+        //alert("uno uno uno!");
+        let myModalUno = new bootstrap.Modal(document.getElementById('unoModal'));
+        myModalUno.show();
+        document.getElementById('endYes').addEventListener('click', function (evt) {
+            evt.preventDefault();
+            myModalUno.hide();
+        });
     }
 }
 
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
-    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) { //aP.hasChildNodes() == false) {
-    alert("Du hast gewonnen!!!");
-    let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
-    myModalEnde.show();
-    document.getElementById('endYes').addEventListener('submit', function (evt) {
-        //evt.preventDefault();
-        myModalEnde.hide();
-    })
-    exit = true;
+    if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
+        let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
+        myModalEnde.show();
+        document.getElementById('endYes').addEventListener('submit', function (evt) {
+            //evt.preventDefault();
+            myModalEnde.hide();
+        });
+        exit = true;
     }
 }
 
@@ -435,11 +456,12 @@ function gewinner(aktiverSpieler) {
 async function drawCard() {
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
         method: 'PUT',
+        cache: 'no-store',
     });
     let newCard;
     if (response.ok) {
         newCard = await response.json(); // response Body auslesen
-        //alert("neue Karte: " + JSON.stringify(newCard));
+        //console.log("neue Karte: " + JSON.stringify(newCard));
         console.log(newCard);
         addCard(newCard.Card);
         aktiverSpieler = newCard.NextPlayer;
@@ -465,6 +487,7 @@ function addCard(el) {
 async function getCardsOf(player) {
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/GetCards/${spielID}?playerName=${player}`, {
         method: 'GET',
+        cache: 'no-store',
     });
     let infoPlayerAbfrage;
     if (response.ok) {

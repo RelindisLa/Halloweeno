@@ -58,7 +58,7 @@
                 </button>
 
                 <audio controls autoplay id="sound_bar">
-                    <source src="assets/sound/GewitterDumpf.mp3" type="audio/mpeg">
+                    <source src="assets/sound/GewitterDumpf.mp3" type="audio/mpeg; autoplay">
                 </audio>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -117,7 +117,6 @@
     <script src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/smoothscroll/smooth-scroll.js"></script>
     <script src="assets/dropdown/js/navbar-dropdown.js"></script>
-
     <input name="animation" type="hidden">
 
     <div class="modal fade" id="playerNames" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
@@ -156,6 +155,8 @@
         </form>
     </div>
 
+    <script src="assets/theme/js/game.js"></script>
+
     <div class="modal fade" id="colorsToChoose" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
         <form id="colorButtons">
             <div class="modal-dialog">
@@ -165,7 +166,8 @@
                     </div>
                     <div class="modal-body mx-auto">
                         <div>
-                            <button type="submit" class="btn btn-primary" id="chooseRed">Rot</button>
+                            <button type="submit" class="btn btn-primary" id="chooseRed" 
+                                style="background-color: crimson;">Rot</button>
                         </div>
                         <div>
                             <button type="submit" class="btn btn-primary" id="chooseYellow"
@@ -180,8 +182,20 @@
                                 style="background-color: blue;">Blau</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                </div>
+            </div>
+        </form>
+    </div>
 
+    <div class="modal fade" id="unoModal" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
+        <form>
+            <div class="modal-dialog mx-auto">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h5 class="modal-title" style="color: red; font-weight: bolder; text-align: center;">UNO UNO UNO</h5>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary mx-auto " id="endYes">OK</button>
                     </div>
                 </div>
             </div>
@@ -191,6 +205,9 @@
     <div class="modal" id="winnerVideo" tabindex="-1" data-bs-keyboard="false" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered fullscreen">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" style="color: red; font-weight: bolder; text-align: center;">Du hast gewonnen!</h2>
+                </div>
                 <div class="modal-body">
                     <div class="videoWrapper">
                         <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/6cx1WaoWQ34?start=1"
@@ -198,8 +215,8 @@
                             allowfullscreen></iframe>
                     </div>
                     <div>
-                        <form class="" style="">
-                            <button type="submit" class="btn btn-primary mx-auto " id="endYes">Beenden</button>
+                        <form>
+                            <button type="submit" class="btn btn-primary mx-auto " id="endYes"><a href="play.html">Neues Spiel</a></button>
                         </form>
                     </div>
                 </div>
@@ -207,7 +224,7 @@
         </div>
     </div>
 
-    <script src="assets/theme/js/game.js"></script>
+
 
 </body>
 
