@@ -417,7 +417,7 @@ function unoRufen(aktiverSpieler) {
     if (aP.hasChildNodes() == true && aP.childNodes.length == 2) {
         let myModalUno = new bootstrap.Modal(document.getElementById('unoModal'));
         myModalUno.show();
-        document.getElementById('endYes').addEventListener('click', function (evt) {
+        document.getElementById('endUnoYes').addEventListener('click', function (evt) {
             evt.preventDefault();
             myModalUno.hide();
         });
