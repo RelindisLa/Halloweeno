@@ -13,7 +13,8 @@ const audioCardflick = new Audio('assets/sound/mixkit-twig-breaking-2945.wav');
 
 //hier beginnt das Spiel mit der Abfrage der Namen:
 let myModal = new bootstrap.Modal(document.getElementById('playerNames'));
-myModal.show();  //-------------------------------------------------------------------------------------------------> NamesModal!!!
+document.getElementById('playerNamesSubmit').disabled = true;
+myModal.show();  //----------------------------------------------------------------------------------> NamesModal!!!
 //startGame(printGameInfo); //   --------------------------------------------------------------------> wird nicht gebraucht beim Modal!!!!
 
 document.getElementById('playerNamesForm').addEventListener('keyup', function (evt) {
@@ -22,9 +23,9 @@ document.getElementById('playerNamesForm').addEventListener('keyup', function (e
     let player2 = document.getElementById('playerName2input').value.toUpperCase();
     let player3 = document.getElementById('playerName3input').value.toUpperCase();
     let player4 = document.getElementById('playerName4input').value.toUpperCase();
-    playerListe = [player1, player2, player3, player4]; // --------------------------------------------------------> NamesModal!!!
+    playerListe = [player1, player2, player3, player4]; // ------------------------------------------> NamesModal!!!
 
-    if (player1 === "" || player2 === "" || player3 === "" || player4 === "") {
+    if (player1 == '' || player2 == '' || player3 == '' || player4 == '') {
         document.getElementById('playerNamesSubmit').disabled = true;
     } else if (
         player1 !== player2 &&
@@ -165,6 +166,7 @@ function unfocus() {
 //Aktiver Spieler --> focus + ....
 function focusAktivPlayer(aktiverSpieler) {
     unfocus();
+    document.getElementById("hebestapel").classList.remove('vibrate-1');
     let aP = document.getElementById(aktiverSpieler);
     aP.parentNode.classList.remove('unfocus');
     playCard();  //prüft karte, let karte ab, prüft gewinner, get next Player
@@ -212,25 +214,20 @@ function playCard() {
             } else if (colorClick === 'Black') {
                 if (valueClick === '14') { //Farbwechsel
                     audioColor.play();
-                    if (valueAblage === '13' || valueAblage === '14') {
-                        this.setAttribute("id", "gespielteKarte");
-                        unoRufen(aktiverSpieler);
-                        audioCardflick.play();
-                        karteAblegen(valueClick, colorClick, colorAblage);
-                    } else {
-                        this.setAttribute("id", "gespielteKarte");
-                        unoRufen(aktiverSpieler);
-                        audioCardflick.play();
-                        blackCard(this, valueClick, colorClick);
-                    }
+                    this.setAttribute("id", "gespielteKarte");
+                    unoRufen(aktiverSpieler);
+                    blackCard('14', colorClick);
+                    audioCardflick.play();
                 }
                 if (valueClick === '13') { //+4
-                    if (darfPlus4Legen(kartenArray, colorAblage) === true) {
-                        this.setAttribute("id", "gespielteKarte");
-                        audioPlus4.play();
-                        unoRufen(aktiverSpieler);
+                    if (darfPlus4Legen(kartenArray, colorAblage, valueAblage) === true) {
+                        setTimeout(function(){
+                            audioPlus4.play();
+                            unoRufen(aktiverSpieler);
+                            blackCard('13', colorClick);
+                        }, 200);              
+                        this.setAttribute("id", "gespielteKarte");          
                         audioCardflick.play();
-                        blackCard(this, valueClick, colorClick);
                     } else {
                         this.classList.add('shake');
                         //alert("Diese Karte darfst du nicht spielen");
@@ -245,7 +242,7 @@ function playCard() {
     document.getElementById('hebestapel').addEventListener('click', drawCard);
 }
 
-function blackCard(dort, value, color) {
+function blackCard(value, color) {
     let chooseColorModal = new bootstrap.Modal(document.getElementById('colorsToChoose'));
     chooseColorModal.show();
 
@@ -253,42 +250,39 @@ function blackCard(dort, value, color) {
         evt.preventDefault();
         chooseColorModal.hide();
         let wildColor = 'Red';
-        dort.setAttribute("id", "gespielteKarte");
         karteAblegen(value, color, wildColor);
     });
     document.getElementById('chooseYellow').addEventListener('click', function (evt) {
         evt.preventDefault();
         chooseColorModal.hide();
         let wildColor = 'Yellow';
-        dort.setAttribute("id", "gespielteKarte");
         karteAblegen(value, color, wildColor);
     });
     document.getElementById('chooseGreen').addEventListener('click', function (evt) {
         evt.preventDefault();
         chooseColorModal.hide();
         let wildColor = 'Green';
-        dort.setAttribute("id", "gespielteKarte");
         karteAblegen(value, color, wildColor);
     });
     document.getElementById('chooseBlue').addEventListener('click', function (evt) {
         evt.preventDefault();
         chooseColorModal.hide();
         let wildColor = 'Blue';
-        dort.setAttribute("id", "gespielteKarte");
         karteAblegen(value, color, wildColor);
     });
 }
 
 function darfPlus4Legen(kartenArray, colorAblage, valueAblage) {
     let darfLegen = true;
-    if (valueAblage === '14') {
+    if (valueAblage === '14') { //Farbwechsel
         darfLegen = false;
-    } else if (valueAblage === '13') {
+    } else if (valueAblage === '13') { //+4
         darfLegen = true;
     } else {
         for (let i = 0; i < kartenArray.length; i++) {
             let cardinfo = kartenArray[i].getAttribute('src');
-            let colorCard = cardinfo[0];
+            let valueIcard = getKartenWerte(cardinfo);
+            let colorCard = valueIcard[0];
             if (colorAblage === colorCard) {
                 darfLegen = false;
             }
@@ -421,7 +415,6 @@ function beginNextPlayer(response) {// value für Abfrage +2/+4
 function unoRufen(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
     if (aP.hasChildNodes() == true && aP.childNodes.length == 2) {
-        //alert("uno uno uno!");
         let myModalUno = new bootstrap.Modal(document.getElementById('unoModal'));
         myModalUno.show();
         document.getElementById('endYes').addEventListener('click', function (evt) {
@@ -445,6 +438,8 @@ function gewinner(aktiverSpieler) {
 
 // Karte ziehen
 async function drawCard() {
+    document.getElementById("hebestapel").classList.add('vibrate-1');
+    audioCardflick.play();
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
         method: 'PUT',
         cache: 'no-store',
@@ -481,7 +476,7 @@ async function getCardsOf(player) {
     let infoPlayerAbfrage;
     if (response.ok) {
         infoPlayerAbfrage = await response.json();
-        console.log("abfrage Cards of: " + player ); //+ " hat Karten: " + JSON.stringify(infoPlayerAbfrage)
+        console.log("abfrage Cards of: " + player); //+ " hat Karten: " + JSON.stringify(infoPlayerAbfrage)
         erstesKartenErstellen(infoPlayerAbfrage);
     }
 }
