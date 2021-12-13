@@ -150,6 +150,10 @@ function erstelltHebestapel() {
     const hebeCard = "Back0";
     img2.src = `${baseUrl}${hebeCard}.png`;
     wo2.appendChild(img2);
+    wo2.addEventListener("mouseover", function () {
+        this.classList.add('vibrate-1');
+        vibrateTimeout(this);
+    });
 }
 
 //Blur alle Spieler:
@@ -166,7 +170,7 @@ function unfocus() {
 //Aktiver Spieler --> focus + ....
 function focusAktivPlayer(aktiverSpieler) {
     unfocus();
-    document.getElementById("hebestapel").classList.remove('vibrate-1');
+    document.getElementById("hebestapel").classList.remove('shake');
     let aP = document.getElementById(aktiverSpieler);
     aP.parentNode.classList.remove('unfocus');
     playCard();  //prüft karte, let karte ab, prüft gewinner, get next Player
@@ -230,6 +234,7 @@ function playCard() {
                         audioCardflick.play();
                     } else {
                         this.classList.add('shake');
+                        shakeTimeout(this);
                         //alert("Diese Karte darfst du nicht spielen");
                     }
                 }
@@ -352,7 +357,7 @@ async function karteAblegen(value, color, wildColor) {
         } else if (responseInfo.error === 'IncorrectPlayer') {
             console.log("Incorrect Player");
         } else if (responseInfo.error === 'Draw4NotAllowed') {
-            alert("Diese Karte darfst du noch nicht spielen!");
+            //alert("Diese Karte darfst du noch nicht spielen!");
             console.log("Draw4NotAllowed");
         } else {
             let spielkarte = document.getElementById('gespielteKarte');
@@ -427,10 +432,11 @@ function unoRufen(aktiverSpieler) {
 function gewinner(aktiverSpieler) {
     let aP = document.getElementById(aktiverSpieler);
     if (aP.hasChildNodes() == true && aP.childNodes.length == 1) {
+        document.getElementById('winner').innerHTML = aktiverSpieler;
         let myModalEnde = new bootstrap.Modal(document.getElementById('winnerVideo')); //x-mas https://youtu.be/oflFgOYyeoU
         myModalEnde.show();
         document.getElementById('endYes').addEventListener('submit', function (evt) {
-            //evt.preventDefault();
+            evt.preventDefault();
             myModalEnde.hide();
         });
     }
@@ -438,7 +444,7 @@ function gewinner(aktiverSpieler) {
 
 // Karte ziehen
 async function drawCard() {
-    document.getElementById("hebestapel").classList.add('vibrate-1');
+    document.getElementById("hebestapel").classList.add('shake');
     audioCardflick.play();
     let response = await fetch(`http://nowaunoweb.azurewebsites.net/api/game/drawCard/${spielID}`, {
         method: 'PUT',
