@@ -363,9 +363,11 @@ async function karteAblegen(value, color, wildColor) {
             let spielkarte = document.getElementById('gespielteKarte');
             slideCard(spielkarte);
             setTimeout(function () {
-                if (value === '13' || value === '14') {
-                    document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${value}.png`);
-                } else {
+                if (value === '13') {
+                    document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${'13'}.png`);
+                } else if(value === '14'){
+                    document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${wildColor}${'14'}.png`);
+                }else {
                     document.getElementsByClassName('ablage123')[0].setAttribute('src', `${baseUrl}${color}${value}.png`);
                 }
             }, 800);
@@ -482,7 +484,7 @@ async function getCardsOf(player) {
     let infoPlayerAbfrage;
     if (response.ok) {
         infoPlayerAbfrage = await response.json();
-        console.log("abfrage Cards of: " + player); //+ " hat Karten: " + JSON.stringify(infoPlayerAbfrage)
+        //console.log("abfrage Cards of: " + player); //+ " hat Karten: " + JSON.stringify(infoPlayerAbfrage)
         erstesKartenErstellen(infoPlayerAbfrage);
     }
 }
