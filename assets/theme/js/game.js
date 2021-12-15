@@ -45,7 +45,7 @@ document.getElementById('playerNamesForm').addEventListener('submit', function (
 });
 
 async function startGame(callback) {
-    //playerListe = ["a", "b", "c", "d"]; //  ------------------->--------------------------------->  wird nicht gebraucht beim Modal!!!!
+    //playerListe = ["a", "b", "c", "d"]; //  ----------------------------------------------------->  wird nicht gebraucht beim Modal!!!!
     let response = await fetch("http://nowaunoweb.azurewebsites.net/api/Game/Start/", {
         method: 'POST',
         body: JSON.stringify(
@@ -234,8 +234,7 @@ function playCard() {
                         audioCardflick.play();
                     } else {
                         this.classList.add('shake');
-                        shakeTimeout(this);
-                        //alert("Diese Karte darfst du nicht spielen");
+                        shakeTimeout(this); //alert("Diese Karte darfst du nicht spielen");
                     }
                 }
             } else {
@@ -357,7 +356,6 @@ async function karteAblegen(value, color, wildColor) {
         } else if (responseInfo.error === 'IncorrectPlayer') {
             console.log("Incorrect Player");
         } else if (responseInfo.error === 'Draw4NotAllowed') {
-            //alert("Diese Karte darfst du noch nicht spielen!");
             console.log("Draw4NotAllowed");
         } else {
             let spielkarte = document.getElementById('gespielteKarte');
@@ -372,13 +370,11 @@ async function karteAblegen(value, color, wildColor) {
                 }
             }, 800);
             removeTimeout(spielkarte);
-            gewinner(aktiverSpieler);
-            setTimeout(function () { beginNextPlayer(responseInfo) }, 800); // value für Abfrage +2/+4
             console.log("alter spieler ist: " + aktiverSpieler);
+            setTimeout(function () { beginNextPlayer(responseInfo) }, 800); // value für Abfrage +2/+4
         }
     } else if (!response.ok) { // falls servererror -> Info, eventuell weiterspielen möglich
         alert("Das Server-Gerippe klappert. Es ächzt und stöhnt und pfeift ein letztes Mal, dann legt es sich zur Ruh'");
-
     }
 }
 
@@ -405,6 +401,7 @@ function removeTimeout(element) {
 
 function beginNextPlayer(response) {// value für Abfrage +2/+4
     playerListe.forEach(element => getCardsOf(element));
+    gewinner(aktiverSpieler);
 
     setTimeout(function () {
         aktiverSpieler = response.Player;
@@ -486,6 +483,8 @@ async function getCardsOf(player) {
         infoPlayerAbfrage = await response.json();
         //console.log("abfrage Cards of: " + player); //+ " hat Karten: " + JSON.stringify(infoPlayerAbfrage)
         erstesKartenErstellen(infoPlayerAbfrage);
+    } else if (!response.ok) { // falls servererror -> Info, eventuell weiterspielen möglich
+        alert("Das Server-Gerippe klappert. Es ächzt und stöhnt und pfeift ein letztes Mal, dann legt es sich zur Ruh'");
     }
 }
 

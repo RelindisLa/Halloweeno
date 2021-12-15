@@ -12,6 +12,17 @@ canvas {
     filter: blur(1px);
 }
 
+#spielerkarten3u4 {
+    display: flex;
+    flex-flow: column;
+}
+#playerName3 {
+    order: 2;
+}
+#playerName4 {
+    order: 1;
+}
+
 /* ----------------------------------------------------------------------------------------------
   Hier ist die Position der Soundbar in der Nav
   -----------------------------------------------------------------------------------------------*/
@@ -36,6 +47,7 @@ canvas {
     color: rgb(224, 223, 223);
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     text-shadow: 2px 2px 4px rgb(139, 224, 206);
+    overflow: auto;
 }
 
 #spielerkarten1u2 {
